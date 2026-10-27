@@ -1,4 +1,8 @@
-SureLive Local Assistant 0.1.0-preview.1
+SureLive Local Assistant 0.1.1-basic.preview.1
+
+Basic builds prepare optional NVIDIA components on demand from pinned official
+archives. Their terms are included here and retained with the downloaded files.
+基础包按需准备 NVIDIA 组件，来自固定官方归档，相关条款随包及组件保留。
 
 Windows x64 preview for the matching SureLive cinema extension.
 Application code: MIT, with upstream notices retained in LICENSE.txt.

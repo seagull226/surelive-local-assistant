@@ -72,6 +72,7 @@ def run(args):
         sentinel = install / 'user-keep.txt'
         sentinel.write_text('User file must survive upgrade and uninstall')
         for label, extra in [('gpu', []), ('cpu', ['--hide-cuda'])]:
+            if label=='gpu' and args.runtime_path: extra += ['--runtime-path',str(args.runtime_path.resolve())]
             command = [sys.executable, str(ROOT / 'tools/smoke_native.py'), '--payload', str(install),
                        '--output', str(output / label), '--audio', str(args.audio.resolve()),
                        '--model-source', str(args.model_source.resolve()), '--exercise-cancel', *extra]
@@ -112,4 +113,5 @@ if __name__ == '__main__':
     for field in ('installer', 'output', 'audio', 'model-source'):
         parser.add_argument('--' + field, required=True, type=Path)
     parser.add_argument('--browser-test', type=Path)
+    parser.add_argument('--runtime-path', type=Path)
     run(parser.parse_args())

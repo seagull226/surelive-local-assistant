@@ -4,7 +4,22 @@ from pathlib import Path
 
 BASE = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).parent
 handles = []
-if (BASE / 'gpu').is_dir():
+if __name__ == '__main__' and sys.argv[1] == '--gpu-check':
+    from gpu_probe import validate
+    try: print(json.dumps(validate(json.loads(sys.argv[2]))), flush=True)
+    except Exception as error:
+        print(json.dumps({'preferred':'cpu','error':str(error)}), flush=True)
+        raise SystemExit(1)
+    raise SystemExit(0)
+spec = None
+if __name__ == '__main__' and sys.argv[1] != '--probe':
+    spec = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
+    if spec.get('device') != 'cpu' and spec.get('gpuDirectories'):
+        try:
+            from gpu_probe import load_runtime
+            handles.extend(load_runtime(spec['gpuDirectories']))
+        except (OSError, RuntimeError): spec['device'] = 'cpu'; spec['gpuLoadFailed'] = True
+elif (BASE / 'gpu').is_dir():
     handles.append(os.add_dll_directory(str(BASE / 'gpu')))
     os.environ['PATH'] = str(BASE / 'gpu') + os.pathsep + os.environ.get('PATH', '')
 os.environ['HF_HUB_OFFLINE'] = '1'
@@ -25,13 +40,12 @@ if __name__ == '__main__':
     else:
         import numpy as np
         from faster_whisper import WhisperModel, BatchedInferencePipeline
-        spec = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
         sample_count = Path(spec['pcm']).stat().st_size // 4
         if not sample_count: raise RuntimeError('没有有效音轨 / No audio samples')
         duration = sample_count / RATE
         started = time.perf_counter()
         device = 'cpu' if spec.get('device') == 'cpu' else hardware()['preferred']
-        fallback = False
+        fallback = bool(spec.get('gpuLoadFailed') or spec.get('gpuPreparationFailed'))
         def recognize(device):
             print('loading', flush=True)
             model = WhisperModel(spec['modelPath'], device=device, compute_type='float16' if device == 'cuda' else 'int8',

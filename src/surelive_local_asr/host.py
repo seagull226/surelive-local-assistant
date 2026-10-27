@@ -5,6 +5,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlsplit, parse_qs
 from models import Models
 from session_state import Session, atomic_json
+from gpu_runtime import GpuRuntime
 
 BASE = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).parent
 EXTENSION = 'pigcndembijihpdlkdpmopjddomgjogc'
@@ -23,6 +24,8 @@ except (OSError, ValueError): settings = {}
 catalog = json.loads((BASE / 'models.json').read_text(encoding='utf-8'))
 models = Models(catalog, settings.get('modelDirectory', str(DATA / 'models')))
 worker = BASE / 'runtime' / 'SureLive-Inference.exe'
+gpu = GpuRuntime(json.loads((BASE / 'gpu-runtime.json').read_text(encoding='utf-8')),
+                 DATA / 'gpu-runtime', [str(worker)], BASE / 'runtime/gpu')
 ffmpeg = BASE / 'ffmpeg.exe'
 secret = secrets.token_urlsafe(32)
 lock = threading.RLock()
@@ -46,10 +49,9 @@ def refresh_model_directory():
 def probe():
     global hardware
     try:
-        result = subprocess.run([str(worker), '--probe'], capture_output=True, text=True, stdin=subprocess.DEVNULL,
-                                timeout=25, creationflags=subprocess.CREATE_NO_WINDOW)
-        hardware = json.loads(result.stdout)
-    except Exception: hardware = {'preferred': 'cpu', 'cudaDevices': 0}
+        hardware = gpu.discover()
+    except Exception as error:
+        hardware = gpu.status = {'preferred':'cpu','cudaDevices':0,'state':'failed','source':'none','directories':[],'error':str(error)}
 
 def stop(job):
     job['cancel'].set()
@@ -90,18 +92,34 @@ def execute(job, command, stage):
     if code: raise RuntimeError(('\n'.join(tail))[-1400:] or '识别进程异常，请重试')
 
 def run(job):
+    global hardware
     try:
+        if job.get('gpuOnly'):
+            job['stage'] = 'preparing'
+            hardware = gpu.ensure(job['cancel'], lambda d: job.update(download=d,percent=int(d.get('received',0)*100/max(1,d.get('total',1)))), retry=True)
+            if job['cancel'].is_set(): raise RuntimeError('已取消 / Cancelled')
+            if hardware['state']=='failed': raise RuntimeError(hardware['error'])
+            job.update(result={'ready':hardware['preferred']=='cuda'},stage='complete');return
         job['stage'] = 'preparing'
         folder = models.prepare(job['model'], job['cancel'], lambda n: job.update(percent=n), job.get('import_dir'),
                                 job.get('source', 'auto'), lambda detail: job.update(download=detail))
         if job.get('prepareOnly'): job['result'] = {'ready': True}
         else:
+            if job['device'] != 'cpu':
+                hardware = gpu.ensure(job['cancel'], lambda d: job.update(stage='preparing',download=d,
+                                     percent=int(d.get('received',0)*100/max(1,d.get('total',1)))))
+                job['gpuDirectories'] = hardware.get('directories',[])
+                if hardware['preferred'] != 'cuda':
+                    job['device'] = 'cpu'
+                    if hardware.get('error'): job['warning'] = 'NVIDIA 加速准备失败，本次使用 CPU / GPU preparation failed; using CPU'
+                job.pop('download',None)
             temporary = job['folder']; pcm = temporary / 'audio.f32'; output = temporary / 'result.json'
             execute(job, [str(ffmpeg), '-v', 'error', '-nostdin', '-i', str(temporary / 'input.media'),
                           '-map', '0:a:0', '-vn', '-ac', '1', '-ar', '16000', '-f', 'f32le', str(pcm)], 'extracting')
             (temporary / 'input.media').unlink()  # Release the streamed upload before recognizing the audio.
             spec = {key: job[key] for key in ('model', 'language', 'device')}
-            spec.update(modelPath=str(folder), pcm=str(pcm), output=str(output))
+            spec.update(modelPath=str(folder), pcm=str(pcm), output=str(output), gpuDirectories=job.get('gpuDirectories',[]),
+                        gpuPreparationFailed=bool(job.get('warning')))
             (temporary / 'request.json').write_text(json.dumps(spec), encoding='utf-8')
             execute(job, [str(worker), str(temporary / 'request.json')], 'loading')
             job['result'] = json.loads(output.read_text(encoding='utf-8'))
@@ -125,6 +143,7 @@ def begin(model, language='auto', device='auto', prepare_only=False, import_dir=
         job = {'model': model, 'language': language, 'device': device, 'stage': 'preparing' if prepare_only else 'uploading',
                'cancel': threading.Event(), 'prepareOnly': prepare_only, 'import_dir': import_dir,
                'source': settings.get('downloadSource', 'auto')}
+        if settings.get('accelerationMode') == 'cpu': job['device'] = 'cpu'
         jobs[key] = job
         return key, job
 
@@ -151,13 +170,13 @@ class Handler(BaseHTTPRequestHandler):
         if not self.allowed(): self.reply(403, {'error': '助手连接已失效，请重新连接'}); return
         if self.path == '/health':
             with lock: refresh_model_directory()
-            self.reply(200, {'version': 1, 'capabilities': {'longMedia':True, 'chunkSeconds':300}, 'hardware': hardware, 'models': {
+            self.reply(200, {'version': 1, 'capabilities': {'longMedia':True, 'chunkSeconds':300}, 'hardware': gpu.status, 'models': {
                 k: {'ready': models.ready(k), 'bytes': sum(f['size'] for f in v['files']), 'languages': v['languages']}
                 for k, v in catalog.items()}}); return
         key = self.path.removeprefix('/jobs/')
         with lock:
             job = jobs.get(key)
-            self.reply(200, {k: job[k] for k in ('stage', 'percent', 'chunk', 'chunks', 'processedSec', 'totalSec', 'download', 'error', 'result', 'finished') if k in job}) if job else self.reply(404, {})
+            self.reply(200, {k: job[k] for k in ('stage', 'percent', 'chunk', 'chunks', 'processedSec', 'totalSec', 'download', 'error', 'warning', 'result', 'finished') if k in job}) if job else self.reply(404, {})
     def do_POST(self):
         if not self.allowed(): self.reply(403, {}); return
         try:
@@ -207,6 +226,7 @@ server = ThreadingHTTPServer(('127.0.0.1', 0), Handler)
 server.daemon_threads = True
 
 def shutdown():
+    gpu.shutdown.set()
     for job in list(jobs.values()): stop(job)
     server.shutdown(); server.server_close()
     for job in list(jobs.values()):
@@ -223,14 +243,14 @@ def gui():
 def status_snapshot():
     with lock:
         job = next(iter(jobs.values()), {})
-        return {'kind': 'native' if native else 'manager', 'hardware': hardware,
+        return {'kind': 'native' if native else 'manager', 'hardware': gpu.status,
                 'job': {k: job[k] for k in ('model', 'stage', 'percent', 'chunk', 'chunks', 'download', 'error', 'finished') if k in job}}
 
 if __name__ == '__main__':
     native = len(sys.argv) > 1 and sys.argv[1].startswith('chrome-extension://')
     if native and sys.argv[1].rstrip('/') != ORIGIN: raise SystemExit(1)
     if not native and '--gui' not in sys.argv: raise SystemExit(1)
-    probe()
+    threading.Thread(target=probe, daemon=True).start()
     threading.Thread(target=server.serve_forever, daemon=True).start()
     session = Session(DATA, status_snapshot)
     if native:

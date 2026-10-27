@@ -34,12 +34,16 @@ def run(args):
     model_root = output / 'models'
     if args.model_source:
         Models(catalog, model_root).prepare(args.model, threading.Event(), lambda _: None, args.model_source.resolve())
-    (data / 'settings.json').write_text(json.dumps({'modelDirectory': str(model_root)}), encoding='utf-8')
+    (data / 'settings.json').write_text(json.dumps({'modelDirectory': str(model_root),
+        'accelerationMode':getattr(args,'acceleration_mode','auto')}), encoding='utf-8')
     env = {**os.environ, 'LOCALAPPDATA': str(output / 'user'),
            'PATH': str(Path(os.environ['SystemRoot']) / 'System32') + os.pathsep + os.environ['SystemRoot'],
            'PYINSTALLER_RESET_ENVIRONMENT': '1'}
     for name in ('PYTHONPATH', 'PYTHONHOME', 'CUDA_PATH'):
         env.pop(name, None)
+    for name in list(env):
+        if name.startswith('CUDA_PATH') or name=='CUDNN_PATH': env.pop(name,None)
+    if getattr(args,'runtime_path',None): env['PATH'] += os.pathsep + str(args.runtime_path.resolve())
     if args.hide_cuda:
         env['CUDA_VISIBLE_DEVICES'] = '-1'
     origin = 'chrome-extension://pigcndembijihpdlkdpmopjddomgjogc'
@@ -78,6 +82,9 @@ def run(args):
         assert request('/health', source='https://example.invalid')[0] == 403
         assert request('/health', source=None)[0] == 200
         status, health = request('/health')
+        probe_deadline=time.monotonic()+180
+        while health['hardware'].get('state')=='checking' and time.monotonic()<probe_deadline:
+            time.sleep(.2);status,health=request('/health')
         assert status == 200 and health['capabilities']['chunkSeconds'] == 300
         report.update(missingTokenDenied=True, foreignHttpOriginDenied=True,
                       originOptionalWithToken=True, hardware=health['hardware'],
@@ -87,9 +94,12 @@ def run(args):
             status, _ = request(f'/jobs/{key}?model={args.model}&language={args.language}&device={args.device}',
                                 'PUT', args.audio.read_bytes())
             assert status == 202
-            deadline = time.monotonic() + 300
+            deadline = time.monotonic() + getattr(args,'job_timeout',300)
+            phases=set()
             while time.monotonic() < deadline:
                 status, job = request('/jobs/' + key)
+                phase=job.get('download',{}).get('phase')
+                if phase: phases.add(phase)
                 assert status == 200
                 if job.get('finished'):
                     break
@@ -101,6 +111,10 @@ def run(args):
             assert result['segments'], 'No subtitles produced'
             report['recognition'] = {k: result[k] for k in ('durationSec', 'language', 'device', 'cpuFallback', 'inferenceMs')}
             report['recognition']['segments'] = len(result['segments'])
+            report['downloadPhases']=sorted(phases)
+            report['finalHardware']=request('/health')[1]['hardware']
+            report['gpuCacheActivated']=(data/'gpu-runtime/active.json').exists()
+            if job.get('warning'):report['warning']=job['warning']
             assert request('/jobs/' + key, 'DELETE')[0] == 200
             if args.exercise_cancel:
                 cancel_key = str(uuid.uuid4())
@@ -141,4 +155,7 @@ if __name__ == '__main__':
     parser.add_argument('--device', choices=['auto', 'cpu'], default='auto')
     parser.add_argument('--hide-cuda', action='store_true')
     parser.add_argument('--exercise-cancel', action='store_true')
+    parser.add_argument('--runtime-path',type=Path,help='Expose an existing compatible runtime in the isolated PATH')
+    parser.add_argument('--acceleration-mode',choices=['auto','cpu'],default='auto')
+    parser.add_argument('--job-timeout',type=int,default=300)
     run(parser.parse_args())
