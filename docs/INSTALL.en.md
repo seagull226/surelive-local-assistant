@@ -45,7 +45,7 @@ Import requires `model.bin` plus the selected model's configuration, tokenizer, 
 | Setting | Current value |
 | --- | --- |
 | Native Host | `com.surelive.asr.preview` |
-| Extension ID | `pigcndembijihpdlkdpmopjddomgjogc` |
+| Extension IDs | `pigcndembijihpdlkdpmopjddomgjogc` (fixed key / local), `daefoeomgbpapjnpajciiikmhcadbdop` (Microsoft Edge Add-ons), plus optional `extraExtensionIds` in `settings.json` |
 | Protocol | `1` |
 | User data | `%LOCALAPPDATA%/SureLiveASRPreview` |
 

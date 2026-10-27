@@ -43,7 +43,7 @@ Get-FileHash -Algorithm SHA256 -LiteralPath .\SureLive-Local-Assistant-0.1.0-pre
 ## 保持的身份
 
 - Native Host：`com.surelive.asr.preview`
-- 扩展 ID：`pigcndembijihpdlkdpmopjddomgjogc`
+- 扩展 ID：`pigcndembijihpdlkdpmopjddomgjogc`（固定/本地包）、`daefoeomgbpapjnpajciiikmhcadbdop`（Edge 商店版），并支持通过 `settings.json` 的 `extraExtensionIds` 配置新增商店扩展 ID
 - 协议版本：`1`
 - 数据目录：`%LOCALAPPDATA%/SureLiveASRPreview`
 

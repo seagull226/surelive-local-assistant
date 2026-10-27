@@ -8,19 +8,24 @@ from session_state import Session, atomic_json
 from gpu_runtime import GpuRuntime
 
 BASE = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).parent
-EXTENSION = 'pigcndembijihpdlkdpmopjddomgjogc'
-ORIGIN = 'chrome-extension://' + EXTENSION
-if '--write-manifest' in sys.argv:
-    (BASE / 'native-host.json').write_text(json.dumps({
-        'name': 'com.surelive.asr.preview', 'description': 'SureLive ASR preview',
-        'path': str(BASE / 'SureLive-NativeHost.exe'), 'type': 'stdio', 'allowed_origins': [ORIGIN + '/'],
-    }, ensure_ascii=True), encoding='utf-8')
-    raise SystemExit(0)
 DATA = Path(os.environ.get('LOCALAPPDATA', str(Path.home()))) / 'SureLiveASRPreview'
 DATA.mkdir(parents=True, exist_ok=True)
 settings_file = DATA / 'settings.json'
 try: settings = json.loads(settings_file.read_text(encoding='utf-8'))
 except (OSError, ValueError): settings = {}
+EXTENSION = 'pigcndembijihpdlkdpmopjddomgjogc'
+EDGE_EXTENSION = 'daefoeomgbpapjnpajciiikmhcadbdop'
+extra_ids = tuple(x for x in settings.get('extraExtensionIds', []) if isinstance(x, str) and re.fullmatch(r'[a-p]{32}', x))
+EXTENSIONS = tuple(dict.fromkeys((EXTENSION, EDGE_EXTENSION, *extra_ids)))
+ORIGIN = 'chrome-extension://' + EXTENSION
+ORIGINS = tuple('chrome-extension://' + ext for ext in EXTENSIONS)
+if '--write-manifest' in sys.argv:
+    (BASE / 'native-host.json').write_text(json.dumps({
+        'name': 'com.surelive.asr.preview', 'description': 'SureLive ASR preview',
+        'path': str(BASE / 'SureLive-NativeHost.exe'), 'type': 'stdio',
+        'allowed_origins': [origin + '/' for origin in ORIGINS],
+    }, ensure_ascii=True), encoding='utf-8')
+    raise SystemExit(0)
 catalog = json.loads((BASE / 'models.json').read_text(encoding='utf-8'))
 models = Models(catalog, settings.get('modelDirectory', str(DATA / 'models')))
 worker = BASE / 'runtime' / 'SureLive-Inference.exe'
@@ -151,19 +156,19 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, *_): pass
     def allowed(self):
         return (self.headers.get('Host') == f'127.0.0.1:{server.server_port}' and
-                self.headers.get('Origin') in (None, ORIGIN) and secrets.compare_digest(self.headers.get('Authorization', ''), 'Bearer ' + secret))
+                self.headers.get('Origin') in (None, *ORIGINS) and secrets.compare_digest(self.headers.get('Authorization', ''), 'Bearer ' + secret))
     def reply(self, status, data):
         body = json.dumps(data, ensure_ascii=False).encode('utf-8')
         self.send_response(status)
-        if self.headers.get('Origin') == ORIGIN: self.send_header('Access-Control-Allow-Origin', ORIGIN)
+        if self.headers.get('Origin') in ORIGINS: self.send_header('Access-Control-Allow-Origin', self.headers.get('Origin'))
         self.send_header('Vary', 'Origin'); self.send_header('Content-Type', 'application/json')
         self.send_header('Content-Length', str(len(body))); self.end_headers()
         try: self.wfile.write(body)
         except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError): pass
     def do_OPTIONS(self):
-        if self.headers.get('Origin') != ORIGIN or self.headers.get('Host') != f'127.0.0.1:{server.server_port}':
+        if self.headers.get('Origin') not in ORIGINS or self.headers.get('Host') != f'127.0.0.1:{server.server_port}':
             self.reply(403, {}); return
-        self.send_response(204); self.send_header('Access-Control-Allow-Origin', ORIGIN)
+        self.send_response(204); self.send_header('Access-Control-Allow-Origin', self.headers.get('Origin'))
         self.send_header('Access-Control-Allow-Headers', 'Authorization,Content-Type')
         self.send_header('Access-Control-Allow-Methods', 'GET,PUT,DELETE,POST'); self.end_headers()
     def do_GET(self):
@@ -248,7 +253,7 @@ def status_snapshot():
 
 if __name__ == '__main__':
     native = len(sys.argv) > 1 and sys.argv[1].startswith('chrome-extension://')
-    if native and sys.argv[1].rstrip('/') != ORIGIN: raise SystemExit(1)
+    if native and sys.argv[1].rstrip('/') not in ORIGINS: raise SystemExit(1)
     if not native and '--gui' not in sys.argv: raise SystemExit(1)
     threading.Thread(target=probe, daemon=True).start()
     threading.Thread(target=server.serve_forever, daemon=True).start()

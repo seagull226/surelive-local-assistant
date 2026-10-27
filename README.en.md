@@ -2,11 +2,22 @@
 
 [中文](README.md) | [English](README.en.md)
 
-A Windows companion for SureLive's local cinema. Whisper transcribes audio on your PC; the cinema connects through the existing Native Messaging handshake and loopback HTTP interface.
+Local speech-to-text resources and Windows companion for SureLive Local Cinema (`v0.1.7+`). Two local subtitle generation modes are supported:
 
-**Windows x64: [Basic installer, 87.9 MB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.1) · [Retained full installer, 1.21 GB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1).** Start with the basic installer for compatible-library reuse and on-demand NVIDIA components. The full installer includes acceleration libraries up front. Neither includes models or requires a separate Python installation. See [Choose an installer / 两个包怎么选](docs/DOWNLOADS.md).
+### Option 1: Browser-based SenseVoice (Recommended · No EXE installer required)
 
-Read the [basic setup guide](docs/BASIC-INSTALL.en.md) / [中文使用说明](docs/BASIC-INSTALL.md) first. This helper requires the matching preview cinema. Installing it does not add Whisper to an existing production extension. The installer is unsigned; see the [basic release notes](docs/RELEASE-0.1.1-basic.preview.1.md). The original full installer is retained unchanged.
+- **Model Bundle Download**: **[sensevoice-small-fp32-cinema.zip (827 MB)](https://github.com/seagull226/surelive-local-assistant/releases/download/v0.1.1-basic.preview.1/sensevoice-small-fp32-cinema.zip)**
+  - SHA-256: `1190dd40123873afab75c853ffbc5edf09c15454ca0b94bac16c262d0861759f`
+  - Contains the verified `model.onnx` (937,617,178 bytes) and `tokens.txt` (315,894 bytes) for Chinese, English, Cantonese, Japanese, and Korean recognition in the browser (requires WebGPU).
+  - **How to use**: Download and extract the ZIP archive, open SureLive Local Cinema, choose **"SenseVoice · 浏览器内识别"**, click **"导入模型文件夹" (Import model folder)**, and select the extracted `sensevoice-small-fp32` folder.
+
+### Option 2: Whisper Windows Native Companion (99/100 languages · GPU/CPU)
+
+Whisper transcribes audio on your PC; the cinema connects through the Native Messaging handshake and loopback HTTP interface.
+
+**Windows x64: [Basic installer, 87.9 MB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.1) · [Retained full installer, 1.21 GB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1).** Start with the basic installer for compatible-library reuse and on-demand NVIDIA components. The full installer includes acceleration libraries up front. Neither includes Whisper models or requires a separate Python installation. See [Choose an installer / 两个包怎么选](docs/DOWNLOADS.md).
+
+Read the [basic setup guide](docs/BASIC-INSTALL.en.md) / [中文使用说明](docs/BASIC-INSTALL.md) first. Compatible with SureLive `v0.1.7+` Local Cinema (extension IDs `pigcndembijihpdlkdpmopjddomgjogc` and Microsoft Edge Add-ons Store ID `daefoeomgbpapjnpajciiikmhcadbdop`). The installer is unsigned; see the [basic release notes](docs/RELEASE-0.1.1-basic.preview.1.md).
 
 ## Features
 
@@ -16,7 +27,7 @@ Read the [basic setup guide](docs/BASIC-INSTALL.en.md) / [中文使用说明](do
 - User-initiated connection without a pairing code or Windows startup registration. Chinese/English management UI, system tray, progress, and exit confirmation.
 - Five-minute recognition windows with one second of context on each side. Cancellation and disconnect cleanup; no fixed 90-minute limit.
 
-The desktop window manages models and tasks; the cinema handles playback and subtitles. Browser-based SenseVoice belongs to the extension and does not run in this native helper. Language availability is not a promise of equal recognition accuracy.
+The desktop window manages models and tasks; the cinema handles playback and subtitles. Browser-based SenseVoice runs inside the extension via WebGPU and does not require this native helper. Language availability is not a promise of equal recognition accuracy.
 
 ## Development
 
@@ -43,7 +54,7 @@ Building does not require model weights. It writes a new directory within this p
 | `src/surelive_local_asr/` | Host, Whisper worker, desktop UI, model/session management, subtitle stitching |
 | `resources/models.json` | Pinned revisions, languages, sizes, and hashes; no model weights |
 | `tools/` | Independent build, unit tests, and native-protocol smoke check |
-| `installer/windows.nsi` | Per-user installation/uninstallation using the preview identity |
+| `installer/windows.nsi` | Per-user installation/uninstallation |
 | `integration/` | Extension integration reference |
 
 Local configuration, runtime binaries, models, media, subtitles, and build outputs are excluded from Git. Application source retains the [MIT license](LICENSE); dependencies retain their own terms. See [third-party information](THIRD-PARTY-NOTICES.txt).

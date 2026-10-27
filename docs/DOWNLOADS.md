@@ -1,8 +1,23 @@
-# 下载安装包 / Choose an installer
+# 下载模型与安装包 / Downloads & Choose an Installer
 
-## 中文
+## 一、SenseVoice 浏览器内识别模型包（免装 EXE 助手）
 
-两种安装包都需要 Windows x64 和配套 SureLive 隔离影院，二选一即可，不需要都安装。它们使用同一个助手连接身份；当前不是两个独立并行安装的产品。
+如果你在 SureLive 本地影院中选择 **“SenseVoice · 浏览器内识别”**（支持中文、英语、粤语、日语、韩语，需浏览器支持 WebGPU），无需安装下方的 Windows 助手程序，直接下载并解压此模型文件夹包即可：
+
+- **直接下载**：**[sensevoice-small-fp32-cinema.zip (827 MB)](https://github.com/seagull226/surelive-local-assistant/releases/download/v0.1.1-basic.preview.1/sensevoice-small-fp32-cinema.zip)**
+- **ZIP SHA-256**：`1190dd40123873afab75c853ffbc5edf09c15454ca0b94bac16c262d0861759f`
+- **包含文件**：
+  - `model.onnx`（`937,617,178` 字节，SHA-256 `977016bd9c79f9eb343430b5cc305e07ab64d5212dff41b0dcfa1694bee9a8cb`）
+  - `tokens.txt`（`315,894` 字节，SHA-256 `f449eb28dc567533d7fa59be34e2abca8784f771850c78a47fb731a31429a1dc`）
+- **导入步骤**：下载后**先解压 ZIP**，在本地影院左下角点击 **“导入模型文件夹”**，选中解压出来的 `sensevoice-small-fp32` 文件夹即可保存至浏览器本地并离线识别。
+
+---
+
+## 二、Whisper Windows 本机字幕助手（支持 99/100 种语言）
+
+### 中文
+
+两种安装包都需要 Windows x64 和配套 SureLive 本地影院（`v0.1.7+`），二选一即可，不需要都安装。它们使用同一个助手连接身份；当前不是两个独立并行安装的产品。
 
 | 选择 | 基础小包（推荐先选） | 原完整包（保留） |
 | --- | --- | --- |
@@ -20,11 +35,13 @@
 
 Small 模型约 486 MB，Large-v3 约 3.09 GB；两种安装包都不需要用户另外安装 Python。NVIDIA 加速需要兼容显卡驱动，助手不会安装驱动。两种包均未签名，Windows 或企业策略可能提示或阻止运行。
 
-当前需要已有的配套隔离影院，扩展 ID 为 `pigcndembijihpdlkdpmopjddomgjogc`。本仓库不分发插件；安装助手不会为旧正式插件增加 ASR 入口，也不是独立视频播放器。首次安装和模型准备见[基础包中文说明](BASIC-INSTALL.md)或[完整包中文说明](INSTALL.md)。下载后核对相应 Release 的 `SHA256SUMS.txt`。
+配合 SureLive `v0.1.7+` 本地影院使用（支持固定扩展 ID `pigcndembijihpdlkdpmopjddomgjogc` 及 Edge 商店版扩展 ID `daefoeomgbpapjnpajciiikmhcadbdop`）。本仓库不分发浏览器扩展本体，也不是独立视频播放器。首次安装和模型准备见[基础包中文说明](BASIC-INSTALL.md)或[完整包中文说明](INSTALL.md)。下载后核对相应 Release 的 `SHA256SUMS.txt`。
 
-## English
+### English
 
-Both installers require Windows x64 and the matching SureLive preview cinema. **Choose one; you do not need both.** They use the same helper identity and are not separate side-by-side products.
+If you use **SenseVoice (in-browser WebGPU recognition)** in SureLive Local Cinema, you do not need the Windows EXE installer—simply download and extract **[sensevoice-small-fp32-cinema.zip (827 MB)](https://github.com/seagull226/surelive-local-assistant/releases/download/v0.1.1-basic.preview.1/sensevoice-small-fp32-cinema.zip)** (SHA-256: `1190dd40123873afab75c853ffbc5edf09c15454ca0b94bac16c262d0861759f`) and import the extracted `sensevoice-small-fp32` folder in Local Cinema.
+
+For **Whisper (Windows native companion)**, both installers require Windows x64 and SureLive Local Cinema (`v0.1.7+`). **Choose one; you do not need both.** They use the same helper identity and are not separate side-by-side products.
 
 | Choice | Basic installer (recommended starting point) | Retained full installer |
 | --- | --- | --- |
@@ -42,4 +59,4 @@ Having an NVIDIA GPU and driver does not imply that compatible CUDA/cuDNN infere
 
 Small is about 486 MB and Large-v3 about 3.09 GB. Neither installer requires a separate Python installation. NVIDIA acceleration requires a compatible driver; the helper does not install drivers. Both installers are unsigned, so Windows or organizational policy may warn or block them.
 
-The matching preview cinema must already be available to you, extension ID `pigcndembijihpdlkdpmopjddomgjogc`. This repository does not distribute the extension; the helper cannot add ASR to an older production extension or play videos independently. See the [basic setup guide](BASIC-INSTALL.en.md) or [full setup guide](INSTALL.en.md). Verify downloads against `SHA256SUMS.txt` in the corresponding release.
+Compatible with SureLive `v0.1.7+` Local Cinema (extension IDs `pigcndembijihpdlkdpmopjddomgjogc` and Microsoft Edge Add-ons Store ID `daefoeomgbpapjnpajciiikmhcadbdop`). This repository does not distribute the browser extension or play videos independently. See the [basic setup guide](BASIC-INSTALL.en.md) or [full setup guide](INSTALL.en.md). Verify downloads against `SHA256SUMS.txt` in the corresponding release.
