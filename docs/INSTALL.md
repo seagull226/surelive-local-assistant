@@ -2,7 +2,7 @@
 
 [中文](INSTALL.md) | [English](INSTALL.en.md)
 
-**目前没有公开的 Windows 安装包。** 下列操作适用于自行构建的隔离候选；未来发布时应以该 Release 的兼容版本和验证记录为准。GitHub 自动生成的 “Source code” ZIP 是源码，不能双击安装。发布准备状态见[发布检查](RELEASE-READINESS.md)。
+**Windows x64 安装包：`0.1.0-preview.1`。** 在[Releases](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1)下载 `.exe`，兼容范围及验证结果以该版本说明为准。需要配套的隔离影院；这不是给任意旧版插件增加入口的更新。GitHub 自动生成的 “Source code” ZIP 是源码，不能双击安装。
 
 ## 使用前确认
 
@@ -13,16 +13,16 @@
 
 ## 安装和首次使用
 
-1. 未来提供下载时，在本仓库 Releases 选择匹配影院的 Windows x64 安装器，并核对同版本 `SHA256SUMS.txt`。目前不要把旧隔离 EXE 当作已验证的公开版。
+1. 在本仓库 Releases 下载 `SureLive-Local-Assistant-0.1.0-preview.1-win-x64.exe`，并核对同版本 `SHA256SUMS.txt`。不要把历史隔离 EXE 当作本版本。
 2. 安装到当前 Windows 用户。当前脚本不要求管理员权限，安装时注册 Chrome/Edge 的本机连接入口。安装器现为中文，助手窗口可切换中文/English。
 3. 打开“本机字幕助手”。选择 Small 或 Large-v3，点击“下载 / 继续准备”，或用“使用已有模型…”导入完整的对应模型目录。
 4. 在配套影院加载本地视频，选择“Whisper · 本机助手”，点击“连接助手”或“生成字幕”。首次连接无需输入连接码。
 5. 视频原语言应按视频实际对白选择，或选自动检测；它不由学习语言强制决定。翻译目标由插件的“我的母语”决定。识别结果仍需核对。
 
-未来下载后可用 PowerShell 核对文件哈希；将文件名替换为该 Release 的实际文件名：
+下载后可用 PowerShell 核对文件哈希：
 
 ```powershell
-Get-FileHash -Algorithm SHA256 -LiteralPath .\SureLive-ASR-Setup-Preview.exe
+Get-FileHash -Algorithm SHA256 -LiteralPath .\SureLive-Local-Assistant-0.1.0-preview.1-win-x64.exe
 ```
 
 目前构建未签名。Windows 可能提示未知发布者或阻止运行，企业策略也可能禁止继续；哈希校验不能替代数字签名。不要关闭安全防护来完成安装，也不承诺签名后一定没有提示。见 [Microsoft 说明](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation)。
@@ -63,7 +63,7 @@ SenseVoice 在浏览器中运行，主要支持中、英、粤、日、韩；它
 
 识别期间保持影院连接。管理窗口关闭按钮会收进右下角托盘，可从托盘重新打开或退出；运行任务时退出会提示并停止相关工作。没有 Windows 开机自启。
 
-从 Windows 已安装应用中卸载。卸载保留模型和额外用户文件，需删除时由用户确认实际模型路径后自行处理。现有候选使用同一隔离安装身份，不宜在正在识别时覆盖安装；升级/卸载结果仍待新候选实测。
+从 Windows 已安装应用中卸载。卸载保留模型和额外用户文件，需删除时由用户确认实际模型路径后自行处理。本版本沿用隔离安装身份，不宜在正在识别时覆盖安装。具体安装/卸载测试范围见该 Release 的说明。
 
 ## 常见问题
 

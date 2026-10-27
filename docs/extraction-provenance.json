@@ -77,8 +77,8 @@
       "sourcePath": "scripts/windows-helper/installer.nsi",
       "path": "installer/windows.nsi",
       "sourceSha256": "abe940718f6c716979df019860dade2d218e2afc0b72baba2ae7edc84b9b6524",
-      "normalizedSha256": "e24f2ec400d279492b94ef9578a97a83a5ea23cb94269dec2b0ade5b722bcc05",
-      "change": "Build input directory renamed from payload-v2 to payload."
+      "normalizedSha256": "020212a65a4f35606da6a42ffa22f7ba4b83ef74de4c279b3bf607cffb109f09",
+      "change": "Build input renamed to payload; preview release adds file/display version and bundled distribution terms page. Host identity and registration paths remain unchanged."
     },
     {
       "sourcePath": "scripts/windows-helper/native-background.js",

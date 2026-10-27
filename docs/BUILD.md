@@ -1,6 +1,6 @@
 # 独立构建
 
-无需检出 SureLive 插件。当前目标为 Windows x64、Python 3.12，锁文件只针对该组合。
+无需检出 SureLive 插件。当前目标为 Windows x64、Python 3.12，锁文件只针对该组合。`0.1.0-preview.1` 保持助手源码和连接方式，打包时对 faster-whisper 的 PyAV 导入作延迟加载补丁；助手先通过独立 FFmpeg 解码音轨，再给识别模型传入 NumPy PCM，因此不分发未使用的 PyAV 视频库。
 
 ## 准备环境
 
@@ -19,6 +19,9 @@ py -3.12 -m venv .venv
 - `ffmpeg`：兼容的 FFmpeg EXE、SHA-256 和说明文件路径。助手读取第一条音轨并转换为 16 kHz 单声道 Float32 PCM。
 - `gpu`：DLL 数组，每项使用 `path`、`sha256` 和可选 `notices`，格式同 `ffmpeg`。空数组生成 CPU 路径。完整 GPU 构建需要与 CTranslate2 兼容的 CUDA/cuDNN。本次隔离验证使用 cudart 12.1.105、cuBLAS 12.1.3.1、cuDNN 9.1.0.70 的官方归档文件。
 - `makensis`：仅 `--installer` 需要，指向 NSIS `makensis.exe`。
+- `supplementalNotices`：Release 对应源码材料包中的 `notices/`，解压为 `third-party/release-notices`；补充 wheel 没有包含的许可和本机组件条款。不能用旧自动收集目录代替完整随包材料。
+
+发布候选的 FFmpeg 使用对应材料包中的 `ffmpeg-7.1-b08d7969c5.tar.gz`，不使用 Gyan full 或 PyAV 的二进制。解压后，在 MSYS2 UCRT64 安装 `mingw-w64-ucrt-x86_64-gcc make diffutils nasm`，执行 `bash tools/build_ffmpeg.sh <源目录> <新构建目录>`。保留内置解码器和本地文件输入，仅输出助手使用的 Float32 PCM；禁用外部自动探测、GPL/nonfree、网络和视频编码。对应源码、配置及工具版本随源码材料包提供。重新计算生成 EXE 的 SHA-256 填入本机配置。
 
 ```powershell
 Get-FileHash -Algorithm SHA256 -LiteralPath .\third-party\ffmpeg\ffmpeg.exe
@@ -41,6 +44,8 @@ Get-FileHash -Algorithm SHA256 -LiteralPath .\third-party\ffmpeg\ffmpeg.exe
 ```
 
 该步骤不自动安装、签名或上传。安装器保留隔离连接身份和界面；生成 EXE 不等于可以公开分发，见 [当前状态](STATUS.md)。
+
+构建会在输出目录复制 faster-whisper 1.2.1，并只将 `audio.py` 顶层 PyAV 导入延迟至 `decode_audio()`。推理模块始终传入 NumPy PCM，转写算法不变；PyInstaller 显式排除 `av`。已修改源码及构建脚本随包保留，原虚拟环境不被修改。开发锁文件保留上游声明的 PyAV 依赖，但它不进入安装包。不要直接从原 wheel 随意删 DLL。
 
 ## 修改与验证
 

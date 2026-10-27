@@ -1,0 +1,32 @@
+SureLive Local Assistant 0.1.0-preview.1
+
+Windows x64 preview for the matching SureLive cinema extension.
+Application code: MIT, with upstream notices retained in LICENSE.txt.
+Model weights are downloaded/imported separately; no media is uploaded for ASR.
+
+This distribution includes independently licensed third-party components.
+Their notices and terms are in licenses/. They are not relicensed as MIT.
+FFmpeg is a separate LGPL-2.1-or-later executable built without GPL/nonfree
+components. Corresponding source/build materials accompany this release.
+The patched faster-whisper source is in sources/; the change delays an unused
+PyAV import. PCM recognition algorithms and helper UI/protocol are unchanged.
+PyAV and its bundled FFmpeg/x264/x265 binaries are not included.
+
+NVIDIA runtime components are provided solely for use with this application
+under their accompanying NVIDIA terms. Do not modify, reverse engineer,
+decompile, disassemble or redistribute those proprietary components except
+where permitted by their terms or applicable law. These restrictions apply
+only to NVIDIA components, not to the MIT/LGPL or other open-source components.
+NVIDIA retains ownership and is an intended third-party beneficiary for its
+components. No NVIDIA endorsement is implied. Open-source license rights,
+including replacement/rebuilding where applicable, remain intact.
+
+This preview is unsigned. Windows or organization policy may block it.
+No warranty is provided beyond mandatory applicable law or upstream terms.
+
+本安装包为 Windows x64 预览版，需要配套影院；不包含模型。
+助手源码沿用 MIT；第三方组件保留各自许可，见 licenses/。
+NVIDIA 专有运行库仅供本应用使用，其限制不适用于开源组件。
+FFmpeg 对应源码及构建资料随 Release 提供；修改后的 faster-whisper
+源码随包提供。没有捆绑 PyAV/x264/x265。保持开源许可赋予的权利。
+本包未签名，识别结果需核对。详情见随包中英文说明及各组件许可。

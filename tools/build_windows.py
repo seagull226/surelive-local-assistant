@@ -2,6 +2,7 @@
 import argparse
 import ast
 import hashlib
+import importlib.util
 import importlib.metadata as metadata
 import json
 from pathlib import Path
@@ -12,6 +13,23 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'src/surelive_local_asr'
+VERSION = '0.1.0-preview.1'
+
+
+def stage_pcm_dependency(output):
+    """Keep upstream PCM inference unchanged; do not eagerly load unused PyAV."""
+    origin = Path(importlib.util.find_spec('faster_whisper').origin).parent
+    target = output / 'patched-dependencies/faster_whisper'
+    shutil.copytree(origin, target, ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
+    audio = target / 'audio.py'
+    original = audio.read_text(encoding='utf-8')
+    if original.count('\nimport av\n') != 1 or original.count('    resampler = av.audio.resampler.AudioResampler(') != 1:
+        raise ValueError('Unexpected faster-whisper audio source; review the PCM packaging patch')
+    patched = original.replace('\nimport av\n', '\n# SureLive: PyAV is optional for the PCM-only packaged worker.\n')
+    patched = patched.replace('    resampler = av.audio.resampler.AudioResampler(',
+                              '    global av\n    import av\n\n    resampler = av.audio.resampler.AudioResampler(')
+    audio.write_text(patched, encoding='utf-8')
+    return target.parent
 
 
 def sha256(path):
@@ -92,14 +110,23 @@ def build(config_path, output, installer=False):
         raise ValueError('Output must be a NEW directory under this project artifacts/')
     config = json.loads(config_path.read_text(encoding='utf-8'))
     inputs = native_inputs(config)
+    formats = subprocess.check_output([str(inputs[0][0]), '-hide_banner', '-muxers'],
+                                      stderr=subprocess.STDOUT, text=True, timeout=20)
+    if not re.search(r'\bf32le\b', formats):
+        raise ValueError('FFmpeg must support the f32le output required by the helper')
+    supplement = resolve_input(config['supplementalNotices'])
+    if not supplement.is_dir():
+        raise ValueError('Provide the release source/materials bundle notices directory')
     nsis = resolve_input(config['makensis']) if installer else None
     if installer and not nsis.is_file():
         raise ValueError('Configure an existing makensis.exe before building the installer')
     # Validate before any build writes; never install or register a native host.
     output.mkdir(parents=True)
+    patched = stage_pcm_dependency(output)
     freeze(output, 'worker.py', 'SureLive-Inference', [
+        '--paths', str(patched), '--exclude-module', 'av',
         '--collect-binaries', 'ctranslate2', '--collect-binaries', 'tokenizers',
-        '--collect-binaries', 'av', '--collect-binaries', 'onnxruntime', '--collect-data', 'faster_whisper',
+        '--collect-binaries', 'onnxruntime', '--collect-data', 'faster_whisper',
         '--exclude-module', 'torchvision', '--exclude-module', 'torchaudio', '--exclude-module', 'pyarrow',
         '--exclude-module', 'polars', '--exclude-module', 'onnxruntime.transformers', '--exclude-module', 'onnxruntime.tools'])
     freeze(output, 'host.py', 'SureLive-NativeHost', ['--hidden-import', 'pystray._win32'])
@@ -117,6 +144,12 @@ def build(config_path, output, installer=False):
     shutil.copy2(ROOT / 'LICENSE', payload / 'LICENSE.txt')
     shutil.copy2(ROOT / 'THIRD-PARTY-NOTICES.txt', payload / 'THIRD-PARTY-NOTICES.txt')
     dependencies = collect_local_notices(output / 'work', payload / 'licenses')
+    shutil.copytree(supplement, payload / 'licenses/supplement', dirs_exist_ok=True)
+    shutil.copytree(patched / 'faster_whisper', payload / 'sources/faster_whisper')
+    shutil.copy2(ROOT / 'tools/build_windows.py', payload / 'sources/build_windows.py')
+    shutil.copy2(ROOT / 'docs/INSTALL.md', payload / 'README.zh-CN.md')
+    shutil.copy2(ROOT / 'docs/INSTALL.en.md', payload / 'README.en.md')
+    shutil.copy2(ROOT / 'resources/DISTRIBUTION.txt', payload / 'DISTRIBUTION.txt')
     for index, item in enumerate([config['ffmpeg'], *config.get('gpu', [])]):
         for notice in item.get('notices', []):
             source = resolve_input(notice)
@@ -129,7 +162,9 @@ def build(config_path, output, installer=False):
     uninstall += ['RMDir "$INSTDIR\\' + str(p.relative_to(payload)) + '"'
                   for p in sorted((p for p in payload.rglob('*') if p.is_dir()), key=lambda p: len(p.parts), reverse=True)]
     (output / 'uninstall-files.nsh').write_text('\n'.join(uninstall), encoding='utf-8-sig')
-    receipt = {'project': 'surelive-local-assistant', 'privatePreview': True, 'publicDistributionReady': False,
+    if any('av.libs/' in f['path'] or '/av/' in f['path'] for f in files):
+        raise ValueError('Unexpected PyAV runtime in PCM-only payload')
+    receipt = {'project': 'surelive-local-assistant', 'version': VERSION, 'publicDistributionReady': False,
                'protocolVersion': 1, 'nativeHost': 'com.surelive.asr.preview',
                'modelsBundled': False, 'gpuDlls': len(inputs) - 1, 'dependencies': dependencies,
                'files': files, 'installed': False, 'signed': False,
