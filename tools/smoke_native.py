@@ -48,7 +48,7 @@ def run(args):
     if getattr(args,'runtime_path',None): env['PATH'] += os.pathsep + str(args.runtime_path.resolve())
     if args.hide_cuda:
         env['CUDA_VISIBLE_DEVICES'] = '-1'
-    origin = 'chrome-extension://pigcndembijihpdlkdpmopjddomgjogc'
+    origin = 'chrome-extension://' + args.extension_id
     host = payload / 'SureLive-NativeHost.exe'
     rejected = subprocess.run([str(host), 'chrome-extension://' + 'a' * 32 + '/'], env=env,
                               stdin=subprocess.DEVNULL, capture_output=True, timeout=35)
@@ -56,7 +56,7 @@ def run(args):
     process = subprocess.Popen([str(host), origin + '/'], stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env,
                                creationflags=subprocess.CREATE_NO_WINDOW)
-    report = {'foreignNativeOriginDenied': True, 'installed': False, 'registryChanged': False}
+    report = {'extensionId': args.extension_id, 'foreignNativeOriginDenied': True, 'installed': False, 'registryChanged': False}
     watchdog = threading.Timer(45, process.terminate)
     watchdog.start()
     try:
@@ -149,6 +149,7 @@ def run(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--payload', type=Path, required=True)
+    parser.add_argument('--extension-id', choices=['pigcndembijihpdlkdpmopjddomgjogc', 'daefoeomgbpapjnpajciiikmhcadbdop'], default='pigcndembijihpdlkdpmopjddomgjogc')
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--audio', type=Path)
     parser.add_argument('--model-source', type=Path)

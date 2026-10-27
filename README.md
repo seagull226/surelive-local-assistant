@@ -1,5 +1,9 @@
 # SureLive Local Assistant
 
+> Edge 商店版请使用新重建的 `0.1.1-basic.preview.2`，发布状态见[新版本](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.2)。旧 `preview.1` 和完整包仅保留原固定测试 ID 兼容性；下方旧下载链接不适用于商店 ID。SenseVoice 模型包不受影响。
+
+> For the Edge store extension, use rebuilt `0.1.1-basic.preview.2`; check its [release status](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.2). The old preview.1 and full installers support the original test ID only. The SenseVoice model bundle is unaffected.
+
 [中文](README.md) | [English](README.en.md)
 
 SureLive 本地影院的本地语音识别（ASR）配套资源与 Windows 助手。配合 SureLive `v0.1.7` 及以上版本的本地影院使用，提供两种本地字幕生成方式：
@@ -17,7 +21,7 @@ Whisper 在用户电脑上识别音频，通过 Native Messaging 握手与本机
 
 **Windows x64：[基础小包 87.9 MB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.1) · [原完整包 1.21 GB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1)。** 一般先选基础包：复用兼容环境，缺少 NVIDIA 加速库时按需下载；完整包预先包含加速库。两者都不含 Whisper 模型、不需要另装 Python。详细比较见[两个包怎么选 / Choose an installer](docs/DOWNLOADS.md)。
 
-准备安装前请先看[基础包中文说明](docs/BASIC-INSTALL.md) / [English setup guide](docs/BASIC-INSTALL.en.md)。支持配套的 SureLive `v0.1.7+` 本地影院（固定扩展 ID `pigcndembijihpdlkdpmopjddomgjogc` 及 Edge 商店扩展 ID `daefoeomgbpapjnpajciiikmhcadbdop`）。安装包尚未签名；基础包验证范围见[本版说明](docs/RELEASE-0.1.1-basic.preview.1.md)。
+准备安装前请先看[基础包中文说明](docs/BASIC-INSTALL.md) / [English setup guide](docs/BASIC-INSTALL.en.md)。新版 preview.2 支持配套的 SureLive `v0.1.7+` 本地影院（固定扩展 ID `pigcndembijihpdlkdpmopjddomgjogc` 及 Edge 商店扩展 ID `daefoeomgbpapjnpajciiikmhcadbdop`）。安装包尚未签名；基础包验证范围见[本版说明](docs/RELEASE-0.1.1-basic.preview.1.md)。
 
 ## 功能
 

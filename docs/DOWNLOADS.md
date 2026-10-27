@@ -1,5 +1,9 @@
 # 下载模型与安装包 / Downloads & Choose an Installer
 
+> Edge 商店版请使用新重建的 `0.1.1-basic.preview.2`，发布状态见[新版本](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.2)。旧 `preview.1` 和完整包仅保留原固定测试 ID 兼容性；下方旧下载链接不适用于商店 ID。SenseVoice 模型包不受影响。
+
+> For the Edge store extension, use rebuilt `0.1.1-basic.preview.2`; check its [release status](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.2). The old preview.1 and full installers support the original test ID only. The SenseVoice model bundle is unaffected.
+
 ## 一、SenseVoice 浏览器内识别模型包（免装 EXE 助手）
 
 如果你在 SureLive 本地影院中选择 **“SenseVoice · 浏览器内识别”**（支持中文、英语、粤语、日语、韩语，需浏览器支持 WebGPU），无需安装下方的 Windows 助手程序，直接下载并解压此模型文件夹包即可：
@@ -35,7 +39,7 @@
 
 Small 模型约 486 MB，Large-v3 约 3.09 GB；两种安装包都不需要用户另外安装 Python。NVIDIA 加速需要兼容显卡驱动，助手不会安装驱动。两种包均未签名，Windows 或企业策略可能提示或阻止运行。
 
-配合 SureLive `v0.1.7+` 本地影院使用（支持固定扩展 ID `pigcndembijihpdlkdpmopjddomgjogc` 及 Edge 商店版扩展 ID `daefoeomgbpapjnpajciiikmhcadbdop`）。本仓库不分发浏览器扩展本体，也不是独立视频播放器。首次安装和模型准备见[基础包中文说明](BASIC-INSTALL.md)或[完整包中文说明](INSTALL.md)。下载后核对相应 Release 的 `SHA256SUMS.txt`。
+新版 preview.2 配合 SureLive `v0.1.7+` 本地影院使用（支持固定扩展 ID `pigcndembijihpdlkdpmopjddomgjogc` 及 Edge 商店版扩展 ID `daefoeomgbpapjnpajciiikmhcadbdop`）。本仓库不分发浏览器扩展本体，也不是独立视频播放器。首次安装和模型准备见[基础包中文说明](BASIC-INSTALL.md)或[完整包中文说明](INSTALL.md)。下载后核对相应 Release 的 `SHA256SUMS.txt`。
 
 ### English
 
@@ -59,4 +63,4 @@ Having an NVIDIA GPU and driver does not imply that compatible CUDA/cuDNN infere
 
 Small is about 486 MB and Large-v3 about 3.09 GB. Neither installer requires a separate Python installation. NVIDIA acceleration requires a compatible driver; the helper does not install drivers. Both installers are unsigned, so Windows or organizational policy may warn or block them.
 
-Compatible with SureLive `v0.1.7+` Local Cinema (extension IDs `pigcndembijihpdlkdpmopjddomgjogc` and Microsoft Edge Add-ons Store ID `daefoeomgbpapjnpajciiikmhcadbdop`). This repository does not distribute the browser extension or play videos independently. See the [basic setup guide](BASIC-INSTALL.en.md) or [full setup guide](INSTALL.en.md). Verify downloads against `SHA256SUMS.txt` in the corresponding release.
+New preview.2 is compatible with SureLive `v0.1.7+` Local Cinema (extension IDs `pigcndembijihpdlkdpmopjddomgjogc` and Microsoft Edge extension ID `daefoeomgbpapjnpajciiikmhcadbdop`). This repository does not distribute the browser extension or play videos independently. See the [basic setup guide](BASIC-INSTALL.en.md) or [full setup guide](INSTALL.en.md). Verify downloads against `SHA256SUMS.txt` in the corresponding release.

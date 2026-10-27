@@ -1,4 +1,4 @@
-SureLive Local Assistant 0.1.1-basic.preview.1
+SureLive Local Assistant 0.1.1-basic.preview.2
 
 Basic builds prepare optional NVIDIA components on demand from pinned official
 archives. Their terms are included here and retained with the downloaded files.

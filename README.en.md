@@ -1,5 +1,9 @@
 # SureLive Local Assistant
 
+> Edge 商店版请使用新重建的 `0.1.1-basic.preview.2`，发布状态见[新版本](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.2)。旧 `preview.1` 和完整包仅保留原固定测试 ID 兼容性；下方旧下载链接不适用于商店 ID。SenseVoice 模型包不受影响。
+
+> For the Edge store extension, use rebuilt `0.1.1-basic.preview.2`; check its [release status](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.2). The old preview.1 and full installers support the original test ID only. The SenseVoice model bundle is unaffected.
+
 [中文](README.md) | [English](README.en.md)
 
 Local speech-to-text resources and Windows companion for SureLive Local Cinema (`v0.1.7+`). Two local subtitle generation modes are supported:
@@ -17,7 +21,7 @@ Whisper transcribes audio on your PC; the cinema connects through the Native Mes
 
 **Windows x64: [Basic installer, 87.9 MB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.1) · [Retained full installer, 1.21 GB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1).** Start with the basic installer for compatible-library reuse and on-demand NVIDIA components. The full installer includes acceleration libraries up front. Neither includes Whisper models or requires a separate Python installation. See [Choose an installer / 两个包怎么选](docs/DOWNLOADS.md).
 
-Read the [basic setup guide](docs/BASIC-INSTALL.en.md) / [中文使用说明](docs/BASIC-INSTALL.md) first. Compatible with SureLive `v0.1.7+` Local Cinema (extension IDs `pigcndembijihpdlkdpmopjddomgjogc` and Microsoft Edge Add-ons Store ID `daefoeomgbpapjnpajciiikmhcadbdop`). The installer is unsigned; see the [basic release notes](docs/RELEASE-0.1.1-basic.preview.1.md).
+Read the [basic setup guide](docs/BASIC-INSTALL.en.md) / [中文使用说明](docs/BASIC-INSTALL.md) first. New preview.2 is compatible with SureLive `v0.1.7+` Local Cinema (extension IDs `pigcndembijihpdlkdpmopjddomgjogc` and Microsoft Edge extension ID `daefoeomgbpapjnpajciiikmhcadbdop`). The installer is unsigned; see the [basic release notes](docs/RELEASE-0.1.1-basic.preview.1.md).
 
 ## Features
 

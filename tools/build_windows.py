@@ -13,7 +13,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'src/surelive_local_asr'
-VERSION = '0.1.1-basic.preview.1'
+VERSION = '0.1.1-basic.preview.2'
 
 
 def stage_pcm_dependency(output):
