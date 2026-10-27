@@ -19,9 +19,9 @@ SureLive 本地影院的本地语音识别（ASR）配套资源与 Windows 助�
 
 Whisper 在用户电脑上识别音频，通过 Native Messaging 握手与本机 HTTP 接口连接 SureLive 本地影院。
 
-**Windows x64：[基础小包 87.9 MB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.1) · [原完整包 1.21 GB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1)。** 一般先选基础包：复用兼容环境，缺少 NVIDIA 加速库时按需下载；完整包预先包含加速库。两者都不含 Whisper 模型、不需要另装 Python。详细比较见[两个包怎么选 / Choose an installer](docs/DOWNLOADS.md)。
+**Windows x64：[基础小包 87.9 MB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.2) · [原完整包 1.21 GB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1)。** 一般先选基础包：复用兼容环境，缺少 NVIDIA 加速库时按需下载；完整包预先包含加速库。两者都不含 Whisper 模型、不需要另装 Python。详细比较见[两个包怎么选 / Choose an installer](docs/DOWNLOADS.md)。
 
-准备安装前请先看[基础包中文说明](docs/BASIC-INSTALL.md) / [English setup guide](docs/BASIC-INSTALL.en.md)。新版 preview.2 支持配套的 SureLive `v0.1.7+` 本地影院（固定扩展 ID `pigcndembijihpdlkdpmopjddomgjogc` 及 Edge 商店扩展 ID `daefoeomgbpapjnpajciiikmhcadbdop`）。安装包尚未签名；基础包验证范围见[本版说明](docs/RELEASE-0.1.1-basic.preview.1.md)。
+准备安装前请先看[基础包中文说明](docs/BASIC-INSTALL.md) / [English setup guide](docs/BASIC-INSTALL.en.md)。新版 preview.2 支持配套的 SureLive `v0.1.7+` 本地影院（固定扩展 ID `pigcndembijihpdlkdpmopjddomgjogc` 及 Edge 商店扩展 ID `daefoeomgbpapjnpajciiikmhcadbdop`）。安装包尚未签名；基础包验证范围见[本版说明](docs/RELEASE-0.1.1-basic.preview.2.md)。
 
 ## 功能
 

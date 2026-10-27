@@ -25,13 +25,13 @@
 
 | 选择 | 基础小包（推荐先选） | 原完整包（保留） |
 | --- | --- | --- |
-| 版本 | `0.1.1-basic.preview.1` | `0.1.0-preview.1` |
+| 版本 | `0.1.1-basic.preview.2` | `0.1.0-preview.1` |
 | 安装器大小 | **87.9 MB** | **1.21 GB** |
 | 适合谁 | CPU 用户、AMD/Intel 显卡用户、已有兼容 NVIDIA 环境，或希望先少下载的用户 | NVIDIA 用户希望一次备齐加速库，或需要准备多台电脑/网络不稳定的环境 |
 | NVIDIA 加速库 | 检测后复用兼容环境；缺少时从 NVIDIA 官方按需下载约 **1.11 GB**，以后复用缓存 | 加速库已经包含在安装器内 |
 | 无可用 NVIDIA 显卡 | 使用 CPU，不下载 GPU 组件 | 使用 CPU，但仍需下载整个安装器 |
 | Whisper 模型 | **不包含**，首次下载或导入 | **不包含**，首次下载或导入 |
-| 下载 | [基础包 Release](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.1) | [完整包 Release](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1) |
+| 下载 | [基础包 Release](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.2) | [完整包 Release](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1) |
 
 有 NVIDIA 显卡或驱动，不等于已经装好兼容的 CUDA/cuDNN 推理库。基础包会实际检查这些库；缺少时下载组件，下载失败仍可使用 CPU。选择“仅用 CPU，不下载加速组件”可以跳过加速组件准备。AMD/Intel 显卡目前不用于此助手的 GPU 加速。
 
@@ -49,13 +49,13 @@ For **Whisper (Windows native companion)**, both installers require Windows x64 
 
 | Choice | Basic installer (recommended starting point) | Retained full installer |
 | --- | --- | --- |
-| Version | `0.1.1-basic.preview.1` | `0.1.0-preview.1` |
+| Version | `0.1.1-basic.preview.2` | `0.1.0-preview.1` |
 | Installer size | **87.9 MB** | **1.21 GB** |
 | Best for | CPU users, AMD/Intel graphics users, compatible NVIDIA environments, or a smaller initial download | NVIDIA users who want acceleration libraries included up front, multiple-PC deployment, or unreliable network access |
 | NVIDIA libraries | Checks and reuses compatible local libraries; otherwise downloads about **1.11 GB** from NVIDIA and caches them | Included in the installer |
 | No usable NVIDIA GPU | Uses CPU without downloading GPU components | Uses CPU, but the whole installer must still be downloaded |
 | Whisper models | **Not included**; download or import separately | **Not included**; download or import separately |
-| Download | [Basic release](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.1) | [Full release](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1) |
+| Download | [Basic release](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.2) | [Full release](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1) |
 
 Having an NVIDIA GPU and driver does not imply that compatible CUDA/cuDNN inference libraries are installed. The basic installer checks them, prepares missing components when needed, and retains CPU operation on failure. Select **Use CPU only; do not download acceleration components** to skip preparation. AMD/Intel graphics are currently handled through CPU recognition.
 

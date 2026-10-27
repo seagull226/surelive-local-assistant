@@ -19,9 +19,9 @@ Local speech-to-text resources and Windows companion for SureLive Local Cinema (
 
 Whisper transcribes audio on your PC; the cinema connects through the Native Messaging handshake and loopback HTTP interface.
 
-**Windows x64: [Basic installer, 87.9 MB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.1) · [Retained full installer, 1.21 GB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1).** Start with the basic installer for compatible-library reuse and on-demand NVIDIA components. The full installer includes acceleration libraries up front. Neither includes Whisper models or requires a separate Python installation. See [Choose an installer / 两个包怎么选](docs/DOWNLOADS.md).
+**Windows x64: [Basic installer, 87.9 MB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.2) · [Retained full installer, 1.21 GB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1).** Start with the basic installer for compatible-library reuse and on-demand NVIDIA components. The full installer includes acceleration libraries up front. Neither includes Whisper models or requires a separate Python installation. See [Choose an installer / 两个包怎么选](docs/DOWNLOADS.md).
 
-Read the [basic setup guide](docs/BASIC-INSTALL.en.md) / [中文使用说明](docs/BASIC-INSTALL.md) first. New preview.2 is compatible with SureLive `v0.1.7+` Local Cinema (extension IDs `pigcndembijihpdlkdpmopjddomgjogc` and Microsoft Edge extension ID `daefoeomgbpapjnpajciiikmhcadbdop`). The installer is unsigned; see the [basic release notes](docs/RELEASE-0.1.1-basic.preview.1.md).
+Read the [basic setup guide](docs/BASIC-INSTALL.en.md) / [中文使用说明](docs/BASIC-INSTALL.md) first. New preview.2 is compatible with SureLive `v0.1.7+` Local Cinema (extension IDs `pigcndembijihpdlkdpmopjddomgjogc` and Microsoft Edge extension ID `daefoeomgbpapjnpajciiikmhcadbdop`). The installer is unsigned; see the [basic release notes](docs/RELEASE-0.1.1-basic.preview.2.md).
 
 ## Features
 
