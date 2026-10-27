@@ -1,6 +1,8 @@
-# 基础小包：隔离试用
+# 基础小包：安装和使用
 
-本包为 `0.1.1-basic.preview.1`，先在隔离环境验证，尚未替换公开下载。已发布完整包仍可使用。需要配套隔离影院，安装方式、模型下载/导入、托盘及通信方式保持原样；不含 Whisper 模型。
+本包为 `0.1.1-basic.preview.1`，经隔离验证后提供[公开预览下载](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.1)。原完整包继续保留，选包比较见[两个包怎么选](DOWNLOADS.md)。需要配套隔离影院，安装方式、模型下载/导入、托盘及通信方式保持原样；不含 Whisper 模型。
+
+下载 `SureLive-Local-Assistant-0.1.1-basic.preview.1-win-x64.exe`，核对同版 `SHA256SUMS.txt` 后按当前用户安装。打开助手，下载或导入 Small / Large-v3 模型，再在配套影院选择“Whisper · 本机助手”。无需连接码。安装器沿用验证通过的原文件；包内“隔离试用”说明是测试阶段快照，最新使用说明以本页及 Release 附件为准。
 
 首次打开助手会检测显卡和可复用的环境。没有可用 NVIDIA 显卡时使用 CPU，不下载 GPU 组件。发现兼容的 CUDA 12/cuDNN 9 后，在独立进程完成 cuBLAS 运算和 cuDNN 卷积检查再复用，不修改已有环境。搜索范围为 PATH、CUDA_PATH/CUDNN_PATH 和标准 NVIDIA 安装目录，不扫描其他应用的私有环境。
 

@@ -1,6 +1,8 @@
-# Basic installer: isolated preview
+# Basic installer: setup and usage
 
-Version `0.1.1-basic.preview.1` is under isolated validation and does not replace the published full installer. It requires the matching preview cinema. Model management, the tray and the connection protocol are unchanged. Whisper models are not bundled.
+Version `0.1.1-basic.preview.1` is available as a [public preview](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.1) after isolated validation. The original full installer remains available; see [Choose an installer](DOWNLOADS.md). The matching preview cinema is required. Model management, the tray and the connection protocol are unchanged. Whisper models are not bundled.
+
+Download `SureLive-Local-Assistant-0.1.1-basic.preview.1-win-x64.exe`, verify it against the release's `SHA256SUMS.txt`, and install for the current user. Open the helper, download or import Small / Large-v3, then select **Whisper · local helper** in the matching cinema. No pairing code is needed. The installer is the exact validated file; its embedded isolated-preview notes are a test-stage snapshot. This guide and the release attachments provide current instructions.
 
 The helper checks the GPU and reusable libraries. Without an available NVIDIA GPU, it uses CPU and downloads no GPU components. Compatible CUDA 12/cuDNN 9 libraries are reused after a separate process successfully runs cuBLAS operations and a cuDNN convolution. Discovery uses PATH, CUDA_PATH/CUDNN_PATH and standard NVIDIA installation directories; it does not scan private environments belonging to other applications or modify system libraries.
 

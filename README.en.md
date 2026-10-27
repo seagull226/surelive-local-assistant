@@ -4,9 +4,9 @@
 
 A Windows companion for SureLive's local cinema. Whisper transcribes audio on your PC; the cinema connects through the existing Native Messaging handshake and loopback HTTP interface.
 
-**Windows x64 preview installer: [Download 0.1.0-preview.1](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1).** Download the `.exe`; no separate Python installation is required. The existing interface, model management, and connection protocol are preserved. Model weights are downloaded or imported separately.
+**Windows x64: [Basic installer, 87.9 MB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.1) · [Retained full installer, 1.21 GB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1).** Start with the basic installer for compatible-library reuse and on-demand NVIDIA components. The full installer includes acceleration libraries up front. Neither includes models or requires a separate Python installation. See [Choose an installer / 两个包怎么选](docs/DOWNLOADS.md).
 
-Read the [setup guide](docs/INSTALL.en.md) / [中文使用说明](docs/INSTALL.md) first. This helper currently requires the matching preview cinema. Installing it does not add Whisper to an existing production extension. The installer is unsigned; see the [release notes and validation scope](docs/RELEASE-0.1.0-preview.1.md).
+Read the [basic setup guide](docs/BASIC-INSTALL.en.md) / [中文使用说明](docs/BASIC-INSTALL.md) first. This helper requires the matching preview cinema. Installing it does not add Whisper to an existing production extension. The installer is unsigned; see the [basic release notes](docs/RELEASE-0.1.1-basic.preview.1.md). The original full installer is retained unchanged.
 
 ## Features
 

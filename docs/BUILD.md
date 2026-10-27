@@ -31,7 +31,7 @@ Get-FileHash -Algorithm SHA256 -LiteralPath .\third-party\ffmpeg\ffmpeg.exe
 
 ## 构建
 
-基础小包分支：把本机配置的 `gpu` 设为 `[]`，其余 FFmpeg、随包材料和 NSIS 配置沿用。构建仍保留 CPU 所需运行库和固定 `resources/gpu-runtime.json`，不带大型 CUDA/cuDNN 加速库。首次使用按需从 NVIDIA 官方归档准备，详见 [基础包说明](BASIC-INSTALL.md)。完整包配置及已发布资产保留，不覆盖旧输出目录。本轮构建版本为 `0.1.1-basic.preview.1`，未公开发布。
+基础小包分支：把本机配置的 `gpu` 设为 `[]`，其余 FFmpeg、随包材料和 NSIS 配置沿用。构建仍保留 CPU 所需运行库和固定 `resources/gpu-runtime.json`，不带大型 CUDA/cuDNN 加速库。首次使用按需从 NVIDIA 官方归档准备，详见 [基础包说明](BASIC-INSTALL.md)。完整包配置及已发布资产保留，不覆盖旧输出目录。本轮构建版本为 `0.1.1-basic.preview.1`，验证后的同一安装器用于[公开预览](RELEASE-0.1.1-basic.preview.1.md)。构建回执中的未发布状态保留为构建阶段快照。
 
 ```powershell
 .\.venv\Scripts\python.exe tools\build_windows.py --config build.local.json --output artifacts\preview-001

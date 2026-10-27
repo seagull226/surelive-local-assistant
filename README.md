@@ -4,9 +4,9 @@
 
 SureLive 的 Windows 本地字幕助手。Whisper 在用户电脑上识别音频，通过现有 Native Messaging 握手与本机 HTTP 接口连接影院。
 
-**Windows x64 预览安装包：[0.1.0-preview.1 下载](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1)。** 下载其中的 `.exe` 即可安装，不需要自行安装 Python。保留现有界面、模型管理和通信方式；安装包不含模型，首次使用时下载或导入。
+**Windows x64：[基础小包 87.9 MB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.1-basic.preview.1) · [原完整包 1.21 GB](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1)。** 一般先选基础包：复用兼容环境，缺少 NVIDIA 加速库时按需下载；完整包预先包含加速库。两者都不含模型、不需要另装 Python。详细比较见[两个包怎么选 / Choose an installer](docs/DOWNLOADS.md)。
 
-准备安装前请先看[中文使用说明](docs/INSTALL.md) / [English setup guide](docs/INSTALL.en.md)。当前仅支持配套隔离影院，安装助手不会让现有正式插件自动获得 Whisper 功能。安装包尚未签名；验证范围见[本版说明](docs/RELEASE-0.1.0-preview.1.md)。
+准备安装前请先看[基础包中文说明](docs/BASIC-INSTALL.md) / [English setup guide](docs/BASIC-INSTALL.en.md)。当前仅支持配套隔离影院，安装助手不会让现有正式插件自动获得 Whisper 功能。安装包尚未签名；基础包验证范围见[本版说明](docs/RELEASE-0.1.1-basic.preview.1.md)，原完整包保持不变。
 
 ## 功能
 
