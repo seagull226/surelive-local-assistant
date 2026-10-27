@@ -4,6 +4,7 @@
 /dist/
 /third-party/
 /build.local.json
+/build.*.local.json
 __pycache__/
 *.py[cod]
 *.spec

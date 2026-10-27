@@ -1,5 +1,9 @@
 # Windows 公开下载准备 / Windows release readiness
 
+> **更新 / Update — 0.1.0-preview.1:** 下方保留的是首次只读检查记录，不能用来判断当前安装版状态。本次已采用有对应源码的最小 FFmpeg 构建、排除未使用的 PyAV 视频库、补齐随包材料并生成独立安装器。最终结果及限制见[本版说明](RELEASE-0.1.0-preview.1.md)。
+>
+> The initial read-only review below is historical. The installer now uses a traceable minimal FFmpeg build, excludes unused PyAV video libraries, includes redistribution materials and is built independently. See the [release notes](RELEASE-0.1.0-preview.1.md) for current results and limitations. Signing, a website, automatic updates and UI changes remain deferred.
+
 核对日期 / Reviewed: **2026-10-27**。源码基线 / Source baseline: `b7c4079`。
 
 ## 中文

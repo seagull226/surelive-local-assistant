@@ -2,7 +2,7 @@
 
 [中文](INSTALL.md) | [English](INSTALL.en.md)
 
-**There is no public Windows installer yet.** These steps describe a locally built preview candidate. A future release must specify its compatible cinema version and validation results. GitHub's automatically generated “Source code” ZIP is source code, not an installer. See [release readiness](RELEASE-READINESS.md).
+**Windows x64 installer: `0.1.0-preview.1`.** Download the `.exe` from [Releases](https://github.com/seagull226/surelive-local-assistant/releases/tag/v0.1.0-preview.1) and check that release's compatibility and validation notes. The matching preview cinema is required; this update cannot add an entry to an arbitrary older extension. GitHub's automatically generated “Source code” ZIP is source code, not an installer.
 
 ## Before you start
 
@@ -13,16 +13,16 @@
 
 ## Install and prepare your first model
 
-1. When downloads become available, choose the Windows x64 installer matching your cinema from this repository's Releases. Compare its hash with `SHA256SUMS.txt` from the same release. Existing private-preview EXEs are not validated public releases.
+1. Download `SureLive-Local-Assistant-0.1.0-preview.1-win-x64.exe` from this repository's Releases. Compare its hash with `SHA256SUMS.txt` from the same release. Historical private-preview EXEs are not this version.
 2. Install for the current Windows user. The current script does not request administrator privileges; it registers the Chrome/Edge native host for that user. The installer currently uses Chinese; the assistant window supports Chinese and English.
 3. Open the local subtitle helper. Select Small or Large-v3, then **Download / resume**, or choose **Use existing model…** to import a complete matching model folder.
 4. Open a local video in the matching cinema, choose **Whisper · local helper**, and click **Connect helper** or **Generate subtitles**. No pairing code is required.
 5. Select the video's actual spoken language, or automatic detection. The learning-language setting does not force the video's source language. Translation uses the extension's **My native language** setting. Review generated subtitles for mistakes.
 
-To check a future download, replace the filename with the actual release asset name:
+To check your download:
 
 ```powershell
-Get-FileHash -Algorithm SHA256 -LiteralPath .\SureLive-ASR-Setup-Preview.exe
+Get-FileHash -Algorithm SHA256 -LiteralPath .\SureLive-Local-Assistant-0.1.0-preview.1-win-x64.exe
 ```
 
 Current builds are unsigned. Windows may report an unknown publisher or block execution; organizational policies can prevent continuation. A hash check does not replace a digital signature. Do not disable security protections to install the app. Signing does not guarantee the absence of warnings; see [Microsoft's guidance](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation).
@@ -59,7 +59,7 @@ Audio recognition and generated subtitles stay on the PC. Preparing models conta
 
 Keep the cinema connected during recognition. Closing the management window hides it in the system tray. Open it again or quit from the tray; quitting with active tasks prompts and stops the related work. There is no Windows startup registration.
 
-Uninstall through Windows installed apps. Models and additional user files are preserved; remove them separately only after checking the actual model directory. Candidates currently share the preview installation identity, so avoid overwriting an installation during recognition. Upgrade and uninstall behavior still require validation with the new candidate.
+Uninstall through Windows installed apps. Models and additional user files are preserved; remove them separately only after checking the actual model directory. This version retains the preview installation identity, so avoid overwriting an installation during recognition. See the release notes for the exact installation/uninstallation test scope.
 
 ## Troubleshooting
 

@@ -7,8 +7,13 @@ Name "SureLive 本机字幕助手（隔离试用）"
 OutFile "${ROOT}\SureLive-ASR-Setup-Preview.exe"
 InstallDir "$LOCALAPPDATA\Programs\SureLive-ASR-Preview"
 RequestExecutionLevel user
+VIProductVersion "0.1.0.1"
+VIAddVersionKey /LANG=2052 "ProductName" "SureLive Local Assistant"
+VIAddVersionKey /LANG=2052 "FileVersion" "0.1.0-preview.1"
+VIAddVersionKey /LANG=2052 "FileDescription" "SureLive Local Assistant Installer"
 SetCompressor zlib
 !insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_LICENSE "${ROOT}\payload\DISTRIBUTION.txt"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -30,6 +35,7 @@ Section "Helper"
  WriteRegStr HKCU "Software\Microsoft\Edge\NativeMessagingHosts\com.surelive.asr.preview" "" "$INSTDIR\native-host.json"
  SetRegView 32
  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\SureLive-ASR-Preview" "DisplayName" "SureLive 本机字幕助手（隔离试用）"
+ WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\SureLive-ASR-Preview" "DisplayVersion" "0.1.0-preview.1"
  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\SureLive-ASR-Preview" "UninstallString" '$\"$INSTDIR\Uninstall.exe$\"'
  WriteUninstaller "$INSTDIR\Uninstall.exe"
  CreateDirectory "$SMPROGRAMS\SureLive ASR Preview"

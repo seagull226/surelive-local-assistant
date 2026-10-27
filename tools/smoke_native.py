@@ -102,6 +102,19 @@ def run(args):
             report['recognition'] = {k: result[k] for k in ('durationSec', 'language', 'device', 'cpuFallback', 'inferenceMs')}
             report['recognition']['segments'] = len(result['segments'])
             assert request('/jobs/' + key, 'DELETE')[0] == 200
+            if args.exercise_cancel:
+                cancel_key = str(uuid.uuid4())
+                assert request(f'/jobs/{cancel_key}?model={args.model}&language={args.language}&device={args.device}',
+                               'PUT', args.audio.read_bytes())[0] == 202
+                assert request('/jobs/' + cancel_key, 'DELETE')[0] == 200
+                deadline = time.monotonic() + 20
+                while time.monotonic() < deadline:
+                    _, cancelled = request('/jobs/' + cancel_key)
+                    if cancelled.get('finished'):
+                        break
+                    time.sleep(.1)
+                assert cancelled['stage'] == 'cancelled', cancelled.get('stage')
+                report['activeCancellation'] = True
     finally:
         watchdog.cancel()
         process.stdin.close()
@@ -127,4 +140,5 @@ if __name__ == '__main__':
     parser.add_argument('--language', default='en')
     parser.add_argument('--device', choices=['auto', 'cpu'], default='auto')
     parser.add_argument('--hide-cuda', action='store_true')
+    parser.add_argument('--exercise-cancel', action='store_true')
     run(parser.parse_args())
