@@ -13,6 +13,20 @@ COPY = {
  'hardware': ('运行设备', 'PROCESSING DEVICE'),
  'gpu': ('NVIDIA 加速可用 · 无需安装 CUDA 工具包', 'NVIDIA acceleration ready · no CUDA toolkit needed'),
  'cpu': ('CPU 模式 · 无需独立显卡', 'CPU mode · no dedicated graphics card required'),
+ 'gpu_checking': ('正在检测显卡与兼容运行库…', 'Checking GPU and compatible libraries…'),
+ 'gpu_needed': ('检测到 NVIDIA · 首次识别时按需准备加速组件', 'NVIDIA detected · acceleration components will be prepared on first use'),
+ 'gpu_system': ('NVIDIA 加速可用 · 复用本机兼容环境', 'NVIDIA ready · reusing compatible local libraries'),
+ 'gpu_downloaded': ('NVIDIA 加速可用 · 使用已准备组件', 'NVIDIA ready · using downloaded components'),
+ 'gpu_failed': ('加速暂不可用 · 可重试，识别仍可使用 CPU', 'Acceleration unavailable · retry or continue on CPU'),
+ 'gpu_prepare': ('准备 / 重试 NVIDIA 加速', 'Prepare / retry NVIDIA acceleration'),
+ 'gpu_hint': ('缺少组件时从 NVIDIA 官方下载约 1.11 GB；可取消、续传。', 'Missing components: about 1.11 GB from NVIDIA. Cancel and resume supported.'),
+ 'cpu_only': ('仅用 CPU，不下载加速组件', 'Use CPU only; do not download acceleration components'),
+ 'nvidia': ('NVIDIA 官方', 'NVIDIA official'),
+ 'gpu-connecting': ('正在连接 NVIDIA 下载源', 'Connecting to NVIDIA'),
+ 'gpu-downloading': ('正在下载加速组件', 'Downloading acceleration components'),
+ 'gpu-verifying': ('正在校验加速组件', 'Verifying acceleration components'),
+ 'gpu-extracting': ('正在解压并检查加速组件', 'Extracting and checking acceleration components'),
+ 'gpu-waiting': ('等待另一影院准备加速组件', 'Waiting for another cinema to prepare acceleration'),
  'connected': ('影院已连接', 'Cinema connected'), 'standby': ('等待影院连接', 'Waiting for cinema'),
  'models': ('选择识别模型', 'Choose a speech model'),
  'small': ('轻量优先', 'Lightweight'), 'large': ('大模型', 'Larger model'),
@@ -107,6 +121,15 @@ def run_gui(host, test_driver=None):
     def import_model():
         directory = filedialog.askdirectory(title=tr('folder_title'),parent=app)
         if directory: start(directory)
+    def prepare_gpu():
+        if busy(): return
+        try:
+            _, job = host.begin(selected, prepare_only=True)
+            job['gpuOnly'] = True
+            threading.Thread(target=host.run,args=(job,),daemon=True).start()
+        except Exception as error: messagebox.showerror(tr('title'),str(error),parent=app)
+    def cpu_mode():
+        save(accelerationMode='cpu' if widgets['cpu_var'].get() else 'auto'); update()
     def change_directory():
         if busy(): messagebox.showinfo(tr('title'),tr('busy'),parent=app); return
         directory = filedialog.askdirectory(title=tr('storage'),parent=app)
@@ -165,8 +188,14 @@ def run_gui(host, test_driver=None):
         label(shell,tr('subtitle'),10,color=muted).pack(anchor='w')
         hardware = tk.Frame(shell,bg=card,padx=17,pady=12); hardware.pack(fill='x',pady=(16,18))
         label(hardware,tr('hardware'),9,color=muted).pack(anchor='w')
-        label(hardware,tr('gpu') if host.hardware['preferred']=='cuda' else tr('cpu'),11,bold=True).pack(anchor='w',pady=(4,3))
+        widgets['hardware']=label(hardware,'',11,bold=True,wraplength=700,justify='left');widgets['hardware'].pack(anchor='w',pady=(4,3))
         widgets['connection']=label(hardware,'',10,color=accent); widgets['connection'].pack(anchor='w')
+        widgets['gpu_prepare']=button(hardware,tr('gpu_prepare'),prepare_gpu);widgets['gpu_prepare'].pack(anchor='w',pady=(6,0))
+        widgets['gpu_hint']=label(hardware,tr('gpu_hint'),9,color=muted,wraplength=700,justify='left');widgets['gpu_hint'].pack(anchor='w')
+        widgets['cpu_var']=tk.BooleanVar(value=host.settings.get('accelerationMode')=='cpu')
+        widgets['cpu_only']=tk.Checkbutton(hardware,text=tr('cpu_only'),variable=widgets['cpu_var'],command=cpu_mode,
+            bg=card,fg=text,selectcolor=card,activebackground=card,activeforeground=text,highlightthickness=0,font=('Segoe UI',10))
+        widgets['cpu_only'].pack(anchor='w',pady=(4,0))
         label(shell,tr('models'),12,bold=True).pack(anchor='w',pady=(0,9))
         row = tk.Frame(shell,bg=bg); row.pack(fill='x'); row.grid_columnconfigure((0,1),weight=1,uniform='models')
         for i, key in enumerate(('small','large-v3')):
@@ -213,6 +242,14 @@ def run_gui(host, test_driver=None):
         active_remote=next((s.get('job',{}) for s in states if bool(s.get('job')) and not s['job'].get('finished',False)),{})
         job=local_job if local_job and not local_job.get('finished',False) else (active_remote or local_job)
         occupied=busy(); ready=host.models.ready(selected)
+        hw=next((s['hardware'] for s in states if s.get('hardware',{}).get('state') in ('ready','preparing')),host.gpu.status)
+        mode='cpu' if host.settings.get('accelerationMode')=='cpu' else (
+            {'checking':'gpu_checking','needed':'gpu_needed','failed':'gpu_failed','preparing':'gpu-downloading'}.get(hw.get('state'),
+             'gpu_'+hw['source'] if hw.get('source') in ('system','downloaded') else 'gpu' if hw.get('preferred')=='cuda' else 'cpu'))
+        widgets['hardware'].config(text=tr(mode))
+        widgets['gpu_prepare'].config(state='normal' if not occupied and hw.get('state') in ('needed','failed') else 'disabled')
+        widgets['gpu_hint'].config(text=tr('gpu_hint') if hw.get('cudaDevices') and hw.get('state')!='ready' else '')
+        widgets['cpu_only'].config(state='disabled' if occupied else 'normal')
         widgets['connection'].config(text=(tr('connected')+f' · {len(states)}') if states else tr('standby'))
         for key,(frame,choose) in cards.items():
             frame.config(highlightbackground=accent if key==selected else line)
@@ -229,6 +266,7 @@ def run_gui(host, test_driver=None):
             message=tr(detail['source'])+f"  ·  {detail.get('received',0)/1024**2:.1f} / {detail.get('total',0)/1024**2:.1f} MB"
             if detail.get('speed'):message+=f"  ·  {detail['speed']/1024**2:.1f} MB/s"
             message+='  ·  '+detail.get('file','')
+        if job.get('warning'): message=job['warning'] if language=='zh' else job['warning'].split(' / ')[-1]
         if job.get('error'):
             message=job['error'];message=message if language=='zh' else message.split(' / ')[-1]
         widgets['detail'].config(text=message[:450],fg='#ffb4a8' if stage=='error' else muted)

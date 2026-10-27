@@ -1,5 +1,7 @@
 # Windows 公开下载准备 / Windows release readiness
 
+> 最新基础包 / Latest basic preview: [0.1.1-basic.preview.1](RELEASE-0.1.1-basic.preview.1.md)。原完整包仍保留；两包选择见 [Downloads](DOWNLOADS.md)。下方均为历史检查 / The checks below are historical.
+
 > **更新 / Update — 0.1.0-preview.1:** 下方保留的是首次只读检查记录，不能用来判断当前安装版状态。本次已采用有对应源码的最小 FFmpeg 构建、排除未使用的 PyAV 视频库、补齐随包材料并生成独立安装器。最终结果及限制见[本版说明](RELEASE-0.1.0-preview.1.md)。
 >
 > The initial read-only review below is historical. The installer now uses a traceable minimal FFmpeg build, excludes unused PyAV video libraries, includes redistribution materials and is built independently. See the [release notes](RELEASE-0.1.0-preview.1.md) for current results and limitations. Signing, a website, automatic updates and UI changes remain deferred.

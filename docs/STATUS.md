@@ -1,6 +1,10 @@
 # 当前状态
 
-## 最新安装版：0.1.0-preview.1
+## 基础小包：按需 NVIDIA 组件（公开预览）
+
+用户已授权将验证通过的 `0.1.1-basic.preview.1` 基础包上传 Releases，保持测试过的 EXE 字节不变。原 `0.1.0-preview.1` 完整包和正式插件测试包不变。发布及选择说明见[本版说明](RELEASE-0.1.1-basic.preview.1.md)和[两种安装包比较](DOWNLOADS.md)；测试证据仍见 [按需 GPU 记录](ON-DEMAND-GPU.md)。下方为上一版和首次提取的历史状态。
+
+## 保留的完整安装版：0.1.0-preview.1
 
 本轮仅处理 Windows 安装交付：版本及组件条款页、随包材料、可追溯 FFmpeg 音频构建、排除未使用的 PyAV 及相应验证工具。18 项单元测试和真实识别通过。七个运行模块、影院 UI 和连接方式保持原样；正式测试包未改动。最终安装验证及限制统一见[本版说明](RELEASE-0.1.0-preview.1.md)，使用步骤见[中文](INSTALL.md) / [English](INSTALL.en.md)。
 

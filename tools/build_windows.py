@@ -13,7 +13,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'src/surelive_local_asr'
-VERSION = '0.1.0-preview.1'
+VERSION = '0.1.1-basic.preview.1'
 
 
 def stage_pcm_dependency(output):
@@ -141,14 +141,16 @@ def build(config_path, output, installer=False):
         for source, _ in inputs[1:]:
             shutil.copy2(source, payload / 'runtime/gpu' / source.name)
     shutil.copy2(ROOT / 'resources/models.json', payload / 'models.json')
+    shutil.copy2(ROOT / 'resources/gpu-runtime.json', payload / 'gpu-runtime.json')
     shutil.copy2(ROOT / 'LICENSE', payload / 'LICENSE.txt')
     shutil.copy2(ROOT / 'THIRD-PARTY-NOTICES.txt', payload / 'THIRD-PARTY-NOTICES.txt')
     dependencies = collect_local_notices(output / 'work', payload / 'licenses')
     shutil.copytree(supplement, payload / 'licenses/supplement', dirs_exist_ok=True)
     shutil.copytree(patched / 'faster_whisper', payload / 'sources/faster_whisper')
     shutil.copy2(ROOT / 'tools/build_windows.py', payload / 'sources/build_windows.py')
-    shutil.copy2(ROOT / 'docs/INSTALL.md', payload / 'README.zh-CN.md')
-    shutil.copy2(ROOT / 'docs/INSTALL.en.md', payload / 'README.en.md')
+    guide = 'INSTALL' if len(inputs)>1 else 'BASIC-INSTALL'
+    shutil.copy2(ROOT / f'docs/{guide}.md', payload / 'README.zh-CN.md')
+    shutil.copy2(ROOT / f'docs/{guide}.en.md', payload / 'README.en.md')
     shutil.copy2(ROOT / 'resources/DISTRIBUTION.txt', payload / 'DISTRIBUTION.txt')
     for index, item in enumerate([config['ffmpeg'], *config.get('gpu', [])]):
         for notice in item.get('notices', []):
@@ -165,12 +167,13 @@ def build(config_path, output, installer=False):
     if any('av.libs/' in f['path'] or '/av/' in f['path'] for f in files):
         raise ValueError('Unexpected PyAV runtime in PCM-only payload')
     receipt = {'project': 'surelive-local-assistant', 'version': VERSION, 'publicDistributionReady': False,
+               'packageVariant': 'full' if len(inputs)>1 else 'basic', 'gpuPreparation': 'on-demand',
                'protocolVersion': 1, 'nativeHost': 'com.surelive.asr.preview',
                'modelsBundled': False, 'gpuDlls': len(inputs) - 1, 'dependencies': dependencies,
                'files': files, 'installed': False, 'signed': False,
                'sourceFiles': {p.name: sha256(p) for p in sorted(SOURCE.glob('*.py'))}}
     if installer:
-        subprocess.run([str(nsis), '/INPUTCHARSET', 'UTF8', '/DROOT=' + str(output),
+        subprocess.run([str(nsis), '/INPUTCHARSET', 'UTF8', '/DROOT=' + str(output), '/DAPP_VERSION=' + VERSION,
                         str(ROOT / 'installer/windows.nsi')], check=True)
         setup = output / 'SureLive-ASR-Setup-Preview.exe'
         receipt['installer'] = {'name': setup.name, 'sha256': sha256(setup), 'size': setup.stat().st_size}

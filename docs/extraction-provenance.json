@@ -1,21 +1,21 @@
 {
   "sourceRepository": "https://github.com/seagull226/SureLive",
   "sourceCommit": "442704a59d1f357bdec8e424396997f9cded580f",
-  "runtimeBehaviorChanges": false,
+  "runtimeBehaviorChanges": true,
   "files": [
     {
       "sourcePath": "scripts/windows-helper/host.py",
       "path": "src/surelive_local_asr/host.py",
       "sourceSha256": "1c53b9644167e278258b9a00f5d4cc3327d533cd2057118738142b404b13a859",
-      "normalizedSha256": "68bbb2922bd70d809a1c10068f9006914d300e6a011c42f453717fdbf3acf04e",
-      "change": "Unchanged content; Git normalizes line endings."
+      "normalizedSha256": "20dd7ca6bb82f143bd9ebba39405850e5735f722bc5754bb77325ce266909c97",
+      "change": "Adds GPU runtime preparation and CPU policy before recognition; Native Messaging and HTTP authorization retained."
     },
     {
       "sourcePath": "scripts/windows-helper/desktop.py",
       "path": "src/surelive_local_asr/desktop.py",
       "sourceSha256": "353123bd52342793f82b9d2dd46aa22b24e4385dd88c23d118b3225f5dc32c92",
-      "normalizedSha256": "4c4926a50209940035e553c70516c01160e52e40a842df676570e62625ae0cd4",
-      "change": "Unchanged content; Git normalizes line endings."
+      "normalizedSha256": "2ac103af1396867867c34401d43277a5a0fcf97b6673c90bacd9c5138ce54429",
+      "change": "Adds bilingual GPU readiness/preparation controls and a persistent CPU-only option."
     },
     {
       "sourcePath": "scripts/windows-helper/launcher.py",
@@ -28,8 +28,8 @@
       "sourcePath": "scripts/windows-helper/worker.py",
       "path": "src/surelive_local_asr/worker.py",
       "sourceSha256": "5264cd1542e79dc8ffc7bf5defab943a3ed9bda2b61146cd17e052f3c926f290",
-      "normalizedSha256": "5264cd1542e79dc8ffc7bf5defab943a3ed9bda2b61146cd17e052f3c926f290",
-      "change": "Unchanged content; Git normalizes line endings."
+      "normalizedSha256": "affe8742090dfc24998b40b216b6442c6f9f703ff3a8772e6b22fcd7a5e28226",
+      "change": "Adds isolated GPU operation probe and explicit validated runtime directories; recognition algorithm retained."
     },
     {
       "sourcePath": "scripts/windows-helper/models.py",
@@ -77,8 +77,8 @@
       "sourcePath": "scripts/windows-helper/installer.nsi",
       "path": "installer/windows.nsi",
       "sourceSha256": "abe940718f6c716979df019860dade2d218e2afc0b72baba2ae7edc84b9b6524",
-      "normalizedSha256": "020212a65a4f35606da6a42ffa22f7ba4b83ef74de4c279b3bf607cffb109f09",
-      "change": "Build input renamed to payload; preview release adds file/display version and bundled distribution terms page. Host identity and registration paths remain unchanged."
+      "normalizedSha256": "84f510bde3f250292295a8ca4a61f7178228f369b15149cc634ef5417806c9e8",
+      "change": "Basic preview version; registration identity and install/uninstall behavior retained."
     },
     {
       "sourcePath": "scripts/windows-helper/native-background.js",
@@ -95,5 +95,10 @@
       "change": "Unchanged content; Git normalizes line endings."
     }
   ],
-  "hashNotes": "sourceSha256 hashes source working files at extraction; normalizedSha256 hashes distributed text with LF line endings. The model catalog came from a local build artifact, not a tracked source blob."
+  "hashNotes": "sourceSha256 hashes source working files at extraction; normalizedSha256 hashes distributed text with LF line endings. The model catalog came from a local build artifact, not a tracked source blob.",
+  "currentChanges": "Isolated basic installer: optional NVIDIA discovery, verified on-demand preparation and CPU fallback; existing cinema protocol retained. Original extraction source hashes remain historical.",
+  "newRuntimeFiles": [
+    "src/surelive_local_asr/gpu_runtime.py",
+    "src/surelive_local_asr/gpu_probe.py"
+  ]
 }
