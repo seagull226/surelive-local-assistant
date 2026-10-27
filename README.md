@@ -1,8 +1,12 @@
 # SureLive Local Assistant
 
+[中文](README.md) | [English](README.en.md)
+
 SureLive 的 Windows 本地字幕助手。Whisper 在用户电脑上识别音频，通过现有 Native Messaging 握手与本机 HTTP 接口连接影院。
 
 **当前仓库提供源码、构建配置和测试，不提供正式安装包。** 从 SureLive 的隔离助手提取，保留界面、模型管理和通信方式。源码公开不表示安装包已通过商店审核或完成公开分发验证。
+
+准备安装前请先看[中文使用说明](docs/INSTALL.md) / [English setup guide](docs/INSTALL.en.md)。当前仅支持配套隔离影院，安装助手不会让现有正式插件自动获得 Whisper 功能。公开下载还缺的事项见[中英文发布检查](docs/RELEASE-READINESS.md)。
 
 ## 功能
 
