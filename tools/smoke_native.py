@@ -28,15 +28,17 @@ def run(args):
     if bool(args.audio) != bool(args.model_source):
         raise ValueError('Supply both --audio and --model-source, or neither')
     output.mkdir(parents=True)
-    data = output / 'user/SureLiveASRPreview'
-    data.mkdir(parents=True)
+    user = args.reuse_user.resolve() if getattr(args,'reuse_user',None) else output/'user'
+    if not user.is_relative_to(ROOT/'artifacts'): raise ValueError('Reused test user must stay inside project artifacts')
+    data = user / 'SureLiveASRPreview'
+    data.mkdir(parents=True,exist_ok=True)
     catalog = json.loads((payload / 'models.json').read_text(encoding='utf-8'))
     model_root = output / 'models'
     if args.model_source:
         Models(catalog, model_root).prepare(args.model, threading.Event(), lambda _: None, args.model_source.resolve())
     (data / 'settings.json').write_text(json.dumps({'modelDirectory': str(model_root),
         'accelerationMode':getattr(args,'acceleration_mode','auto')}), encoding='utf-8')
-    env = {**os.environ, 'LOCALAPPDATA': str(output / 'user'),
+    env = {**os.environ, 'LOCALAPPDATA': str(user),
            'PATH': str(Path(os.environ['SystemRoot']) / 'System32') + os.pathsep + os.environ['SystemRoot'],
            'PYINSTALLER_RESET_ENVIRONMENT': '1'}
     for name in ('PYTHONPATH', 'PYTHONHOME', 'CUDA_PATH'):
@@ -156,6 +158,7 @@ if __name__ == '__main__':
     parser.add_argument('--hide-cuda', action='store_true')
     parser.add_argument('--exercise-cancel', action='store_true')
     parser.add_argument('--runtime-path',type=Path,help='Expose an existing compatible runtime in the isolated PATH')
+    parser.add_argument('--reuse-user',type=Path,help='Reuse only an isolated artifacts user profile to verify cache reuse')
     parser.add_argument('--acceleration-mode',choices=['auto','cpu'],default='auto')
     parser.add_argument('--job-timeout',type=int,default=300)
     run(parser.parse_args())

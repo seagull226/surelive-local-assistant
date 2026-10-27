@@ -157,7 +157,11 @@ class GpuRuntime:
             def report(detail):
                 telemetry({**detail,'phase':'gpu-'+detail['phase'],'source':'nvidia',
                            'received':done+detail.get('received',0),'total':self.download_bytes})
-            location=downloader.prepare(c['id'],cancel,lambda _:None,source='official',telemetry=report)
+            try:
+                location=downloader.prepare(c['id'],cancel,lambda _:None,source='official',telemetry=report)
+            except Exception as error:
+                if cancel.is_set(): raise
+                raise RuntimeError('NVIDIA 加速组件下载失败，可重试或使用 CPU / NVIDIA acceleration download failed; retry or use CPU') from error
             paths.append((c,location/c['name']));done+=c['size']
         folder=self.root/('pending-'+uuid.uuid4().hex); folder.mkdir()
         assert folder.resolve().is_relative_to(self.root.resolve())

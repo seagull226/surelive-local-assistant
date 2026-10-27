@@ -73,6 +73,16 @@ class GpuRuntimeTests(unittest.TestCase):
     def test_cpu_request_does_not_download_missing_components(self):
         with patch('urllib.request.urlopen',side_effect=AssertionError('no download')):
             self.assertEqual(self.manager.ensure(self.cancel,download=False)['preferred'],'cpu')
+    def test_waiting_for_another_preparation_can_be_cancelled(self):
+        import msvcrt
+        self.manager.status.update(state='needed',cudaDevices=1)
+        with (self.manager.root/'prepare.lock').open('a+b') as guard:
+            guard.write(b'0');guard.flush();guard.seek(0);msvcrt.locking(guard.fileno(),msvcrt.LK_NBLCK,1)
+            try:
+                with self.assertRaises(RuntimeError):
+                    self.manager.ensure(self.cancel,lambda _:self.cancel.set())
+            finally:guard.seek(0);msvcrt.locking(guard.fileno(),msvcrt.LK_UNLCK,1)
+        self.assertEqual(self.manager.status['state'],'needed')
     def test_changed_managed_dll_requires_repair(self):
         with patch('urllib.request.urlopen',side_effect=self.download),patch.object(self.manager,'_check',return_value=self.good):self.manager.ensure(self.cancel)
         p=Path(self.manager.status['directories'][0])/'test.dll';p.write_bytes(b'tampered')
