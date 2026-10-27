@@ -1,0 +1,9 @@
+{
+  "ffmpeg": {
+    "path": "third-party/ffmpeg/ffmpeg.exe",
+    "sha256": "REPLACE_WITH_VERIFIED_SHA256",
+    "notices": []
+  },
+  "gpu": [],
+  "makensis": "third-party/nsis/makensis.exe"
+}

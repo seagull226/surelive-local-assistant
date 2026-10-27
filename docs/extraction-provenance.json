@@ -1,0 +1,99 @@
+{
+  "sourceRepository": "https://github.com/seagull226/SureLive",
+  "sourceCommit": "442704a59d1f357bdec8e424396997f9cded580f",
+  "runtimeBehaviorChanges": false,
+  "files": [
+    {
+      "sourcePath": "scripts/windows-helper/host.py",
+      "path": "src/surelive_local_asr/host.py",
+      "sourceSha256": "1c53b9644167e278258b9a00f5d4cc3327d533cd2057118738142b404b13a859",
+      "normalizedSha256": "68bbb2922bd70d809a1c10068f9006914d300e6a011c42f453717fdbf3acf04e",
+      "change": "Unchanged content; Git normalizes line endings."
+    },
+    {
+      "sourcePath": "scripts/windows-helper/desktop.py",
+      "path": "src/surelive_local_asr/desktop.py",
+      "sourceSha256": "353123bd52342793f82b9d2dd46aa22b24e4385dd88c23d118b3225f5dc32c92",
+      "normalizedSha256": "4c4926a50209940035e553c70516c01160e52e40a842df676570e62625ae0cd4",
+      "change": "Unchanged content; Git normalizes line endings."
+    },
+    {
+      "sourcePath": "scripts/windows-helper/launcher.py",
+      "path": "src/surelive_local_asr/launcher.py",
+      "sourceSha256": "4277c51390e333e98b0d119dfed909df943549328d5843856b8903ef359d86bd",
+      "normalizedSha256": "4277c51390e333e98b0d119dfed909df943549328d5843856b8903ef359d86bd",
+      "change": "Unchanged content; Git normalizes line endings."
+    },
+    {
+      "sourcePath": "scripts/windows-helper/worker.py",
+      "path": "src/surelive_local_asr/worker.py",
+      "sourceSha256": "5264cd1542e79dc8ffc7bf5defab943a3ed9bda2b61146cd17e052f3c926f290",
+      "normalizedSha256": "5264cd1542e79dc8ffc7bf5defab943a3ed9bda2b61146cd17e052f3c926f290",
+      "change": "Unchanged content; Git normalizes line endings."
+    },
+    {
+      "sourcePath": "scripts/windows-helper/models.py",
+      "path": "src/surelive_local_asr/models.py",
+      "sourceSha256": "a373eff7ccf74e2b247da432beadca0170e76328ab8b4bed70d74dc57f686082",
+      "normalizedSha256": "a373eff7ccf74e2b247da432beadca0170e76328ab8b4bed70d74dc57f686082",
+      "change": "Unchanged content; Git normalizes line endings."
+    },
+    {
+      "sourcePath": "scripts/windows-helper/chunking.py",
+      "path": "src/surelive_local_asr/chunking.py",
+      "sourceSha256": "ed5cffa06b5016cd42746d7f6bd3a012ff5d82087b740a308f1ef69233fefd06",
+      "normalizedSha256": "ed5cffa06b5016cd42746d7f6bd3a012ff5d82087b740a308f1ef69233fefd06",
+      "change": "Unchanged content; Git normalizes line endings."
+    },
+    {
+      "sourcePath": "scripts/windows-helper/session_state.py",
+      "path": "src/surelive_local_asr/session_state.py",
+      "sourceSha256": "d3661f65018a1b571988fcc9c85edc105389e6cfcb7f07021fc8ae081e6b2fcd",
+      "normalizedSha256": "d3661f65018a1b571988fcc9c85edc105389e6cfcb7f07021fc8ae081e6b2fcd",
+      "change": "Unchanged content; Git normalizes line endings."
+    },
+    {
+      "sourcePath": "scripts/windows-helper/test_models.py",
+      "path": "tests/test_models.py",
+      "sourceSha256": "a033bcb95b42ad6e948132e9b474fb6770343519bc291a0b8ee8f2c700ef1249",
+      "normalizedSha256": "a033bcb95b42ad6e948132e9b474fb6770343519bc291a0b8ee8f2c700ef1249",
+      "change": "Unchanged content; Git normalizes line endings."
+    },
+    {
+      "sourcePath": "scripts/windows-helper/test_chunking.py",
+      "path": "tests/test_chunking.py",
+      "sourceSha256": "3ef8eb5a29c228a0fd4eabf90cf177c5ffd841af379e2a5b2f1db98cbf525d62",
+      "normalizedSha256": "3ef8eb5a29c228a0fd4eabf90cf177c5ffd841af379e2a5b2f1db98cbf525d62",
+      "change": "Unchanged content; Git normalizes line endings."
+    },
+    {
+      "sourcePath": "artifacts/windows-helper-20261026/payload-v2/models.json",
+      "path": "resources/models.json",
+      "sourceSha256": "77a26f8d3a377bf796c8b77081bd829b8d22d6352b9f3c32b7fabe413273211e",
+      "normalizedSha256": "a1f8148de70a84151935c1278c5a7488f1681336e35ad70251ab02a3d97240fb",
+      "change": "Unchanged content; Git normalizes line endings."
+    },
+    {
+      "sourcePath": "scripts/windows-helper/installer.nsi",
+      "path": "installer/windows.nsi",
+      "sourceSha256": "abe940718f6c716979df019860dade2d218e2afc0b72baba2ae7edc84b9b6524",
+      "normalizedSha256": "e24f2ec400d279492b94ef9578a97a83a5ea23cb94269dec2b0ade5b722bcc05",
+      "change": "Build input directory renamed from payload-v2 to payload."
+    },
+    {
+      "sourcePath": "scripts/windows-helper/native-background.js",
+      "path": "integration/native-background.example.js",
+      "sourceSha256": "26815b36dcf0998f7713d04baefb386c49e2982ac6cf7af7c2169759f7a39d84",
+      "normalizedSha256": "1c017307cd92d31fc4bbdaabdcc94c53522f26c521859f4eb79f0ffe4cbe78ee",
+      "change": "First-line importScripts replaced with integration reference comment."
+    },
+    {
+      "sourcePath": "LICENSE.md",
+      "path": "LICENSE",
+      "sourceSha256": "e0a1b279371eb6a24ce7d083a16631ed62a60710338ab51481ab9703ee459046",
+      "normalizedSha256": "ea520146b29a52abed58e68464ea04dcd8a7b4a8b277342ac0d8c644c43a0fa7",
+      "change": "Unchanged content; Git normalizes line endings."
+    }
+  ],
+  "hashNotes": "sourceSha256 hashes source working files at extraction; normalizedSha256 hashes distributed text with LF line endings. The model catalog came from a local build artifact, not a tracked source blob."
+}

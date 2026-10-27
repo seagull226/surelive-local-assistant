@@ -1,0 +1,13 @@
+SureLive Local Assistant
+
+Application source is provided under the accompanying MIT LICENSE, with
+existing copyright notices retained. The helper was extracted from SureLive;
+see docs/STATUS.md for the source revision.
+
+External dependencies retain their own copyrights and license terms.
+Dependency names or hashes do not relicense them under the application license.
+
+This source repository does not contain model weights or third-party runtime
+binaries. Publishing source does not approve installer redistribution: the
+actual binaries still require their applicable notices, source/relink material
+and distribution terms.
