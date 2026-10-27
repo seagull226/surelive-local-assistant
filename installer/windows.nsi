@@ -8,9 +8,9 @@ OutFile "${ROOT}\SureLive-ASR-Setup-Preview.exe"
 InstallDir "$LOCALAPPDATA\Programs\SureLive-ASR-Preview"
 RequestExecutionLevel user
 !ifndef APP_VERSION
-!define APP_VERSION "0.1.1-basic.preview.1"
+!define APP_VERSION "0.1.1-basic.preview.2"
 !endif
-VIProductVersion "0.1.1.1"
+VIProductVersion "0.1.1.2"
 VIAddVersionKey /LANG=2052 "ProductName" "SureLive Local Assistant"
 VIAddVersionKey /LANG=2052 "FileVersion" "${APP_VERSION}"
 VIAddVersionKey /LANG=2052 "FileDescription" "SureLive Local Assistant Installer"
