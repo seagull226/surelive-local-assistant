@@ -46,6 +46,7 @@ class GpuRuntime:
         self.device_count = device_count
         self.lock = threading.RLock()
         self.shutdown = threading.Event()
+        self.last_probe = {}
         self.status = {'preferred':'cpu','cudaDevices':0,'state':'checking','source':'none','directories':[]}
 
     def _check(self, paths, cancel):
@@ -53,17 +54,22 @@ class GpuRuntime:
         process = subprocess.Popen([*self.command, '--gpu-check', json.dumps(paths)], stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding='utf-8', errors='replace',
             env={**os.environ,'PYINSTALLER_RESET_ENVIRONMENT':'1'}, creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
-        deadline = time.monotonic()+25
+        # First DLL load can be much slower than later loads (including antivirus scanning).
+        deadline = time.monotonic()+90
         try:
             while True:
                 if cancel.is_set() or self.shutdown.is_set(): raise RuntimeError('已取消 / Cancelled')
                 try: out, _ = process.communicate(timeout=.2); break
                 except subprocess.TimeoutExpired:
-                    if time.monotonic()>deadline: return None
-            if process.returncode: return None
+                    if time.monotonic()>deadline:
+                        self.last_probe={'outcome':'timeout','seconds':90}; return None
+            if process.returncode:
+                self.last_probe={'outcome':'process-failed','exitCode':process.returncode,'detail':out[-500:]}; return None
             value = json.loads(out)
+            self.last_probe={'outcome':'passed' if value.get('preferred')=='cuda' else 'unsupported'}
             return value if value.get('preferred')=='cuda' else None
-        except (OSError, ValueError): return None
+        except (OSError, ValueError) as error:
+            self.last_probe={'outcome':'probe-error','detail':str(error)[-500:]};return None
         finally:
             if process.poll() is None: process.kill(); process.communicate()
 
@@ -126,7 +132,12 @@ class GpuRuntime:
                     if self.status['state']=='failed': return dict(self.status)
                     folder = self._prepare(cancel,telemetry)
                     result = self._check([str(folder)],cancel)
-                    if not result: raise RuntimeError('加速组件与此显卡或驱动不兼容 / GPU runtime is incompatible with this GPU or driver')
+                    if not result and self.last_probe.get('outcome') in ('timeout','process-failed'):
+                        # Retry a fresh process once, without downloading the verified archives again.
+                        result = self._check([str(folder)],cancel)
+                    if not result:
+                        self.status['probeFailure']=dict(self.last_probe)
+                        raise RuntimeError('加速组件检查未通过，可重试或使用 CPU / GPU runtime check failed; retry or use CPU')
                     atomic_json(self.root/'active.json',{'revision':self.catalog['revision'],'folder':folder.name})
                     self.status={**result,'state':'ready','source':'downloaded','directories':[str(folder)]}
                     # Keep the verified runtime, free only known archive files after successful activation.
@@ -159,6 +170,12 @@ class GpuRuntime:
                            'received':done+detail.get('received',0),'total':self.download_bytes})
             try:
                 location=downloader.prepare(c['id'],cancel,lambda _:None,source='official',telemetry=report)
+                # These are executable libraries: recheck cached archive bytes, not just size/mtime.
+                if digest(location/c['name']) != c['sha256']:
+                    (location/c['name']).unlink(missing_ok=True)
+                    (location/'verified.json').unlink(missing_ok=True)
+                    location=downloader.prepare(c['id'],cancel,lambda _:None,source='official',telemetry=report)
+                if digest(location/c['name']) != c['sha256']: raise RuntimeError('GPU archive checksum mismatch')
             except Exception as error:
                 if cancel.is_set(): raise
                 raise RuntimeError('NVIDIA 加速组件下载失败，可重试或使用 CPU / NVIDIA acceleration download failed; retry or use CPU') from error

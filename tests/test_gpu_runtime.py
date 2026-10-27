@@ -87,6 +87,13 @@ class GpuRuntimeTests(unittest.TestCase):
         with patch('urllib.request.urlopen',side_effect=self.download),patch.object(self.manager,'_check',return_value=self.good):self.manager.ensure(self.cancel)
         p=Path(self.manager.status['directories'][0])/'test.dll';p.write_bytes(b'tampered')
         self.assertIsNone(self.manager._managed())
+    def test_cached_archive_tampered_with_same_size_and_mtime_is_repaired(self):
+        with patch('urllib.request.urlopen',side_effect=self.download),patch.object(self.manager,'_check',return_value=None):self.manager.ensure(self.cancel)
+        archive=self.manager.root/'downloads/test/runtime.zip';before=archive.stat()
+        archive.write_bytes(b'X'*before.st_size);os.utime(archive,ns=(before.st_atime_ns,before.st_mtime_ns))
+        with patch('urllib.request.urlopen',side_effect=self.download) as network,patch.object(self.manager,'_check',return_value=self.good):
+            self.assertEqual(self.manager.ensure(self.cancel,retry=True)['preferred'],'cuda')
+            self.assertEqual(network.call_count,1)
     def test_discovery_ignores_relative_search_paths(self):
         self.no_system.stop()
         with patch('gpu_runtime.os.environ',{}):self.assertEqual(system_candidates({'PATH':'.;relative','ProgramFiles':str(self.root/'empty')}),[])
