@@ -3,7 +3,7 @@ Unicode True
 !include "StrFunc.nsh"
 !include "LogicLib.nsh"
 ${StrRep}
-Name "SureLive 本机字幕助手（隔离试用）"
+Name "SureLive Local Assistant"
 OutFile "${ROOT}\SureLive-ASR-Setup-Preview.exe"
 InstallDir "$LOCALAPPDATA\Programs\SureLive-ASR-Preview"
 RequestExecutionLevel user
@@ -37,14 +37,16 @@ Section "Helper"
  WriteRegStr HKCU "Software\Google\Chrome\NativeMessagingHosts\com.surelive.asr.preview" "" "$INSTDIR\native-host.json"
  WriteRegStr HKCU "Software\Microsoft\Edge\NativeMessagingHosts\com.surelive.asr.preview" "" "$INSTDIR\native-host.json"
  SetRegView 32
- WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\SureLive-ASR-Preview" "DisplayName" "SureLive 本机字幕助手（隔离试用）"
+ WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\SureLive-ASR-Preview" "DisplayName" "SureLive Local Assistant"
  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\SureLive-ASR-Preview" "DisplayVersion" "${APP_VERSION}"
  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\SureLive-ASR-Preview" "UninstallString" '$\"$INSTDIR\Uninstall.exe$\"'
  WriteUninstaller "$INSTDIR\Uninstall.exe"
  CreateDirectory "$SMPROGRAMS\SureLive ASR Preview"
- CreateShortcut "$SMPROGRAMS\SureLive ASR Preview\本机字幕助手.lnk" "$INSTDIR\SureLive-ASR-Helper.exe"
+ Delete "$SMPROGRAMS\SureLive ASR Preview\本机字幕助手.lnk"
+ CreateShortcut "$SMPROGRAMS\SureLive ASR Preview\SureLive Local Assistant.lnk" "$INSTDIR\SureLive-ASR-Helper.exe"
 SectionEnd
 Section "Uninstall"
+ Delete "$SMPROGRAMS\SureLive ASR Preview\SureLive Local Assistant.lnk"
  SetRegView 64
  ReadRegStr $0 HKCU "Software\Microsoft\Edge\NativeMessagingHosts\com.surelive.asr.preview" ""
  ${If} $0 == "$INSTDIR\native-host.json"

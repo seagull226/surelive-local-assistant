@@ -71,7 +71,7 @@ def run_gui(host, test_driver=None):
         (host.DATA / 'show.request').touch(); guard.close(); return
     app = tk.Tk(); app.withdraw()
     # A launcher may be started hidden; explicitly show the real UI after initialization.
-    app.title('SureLive · ' + COPY['title'][0]); app.geometry('820x700'); app.minsize(780, 650)
+    app.title('SureLive Local Assistant'); app.geometry('820x700'); app.minsize(780, 650)
     bg, card, line, text, muted, accent = '#101722', '#1a2636', '#34465d', '#eef4fc', '#a6b7cd', '#77b9ff'
     app.configure(bg=bg)
     language = host.settings.get('uiLanguage', 'zh'); selected = host.settings.get('selectedModel', 'small')
@@ -171,7 +171,7 @@ def run_gui(host, test_driver=None):
 
     def render():
         for child in app.winfo_children(): child.destroy()
-        widgets.clear(); cards.clear(); app.title('SureLive · ' + tr('title'))
+        widgets.clear(); cards.clear(); app.title('SureLive Local Assistant')
         canvas=tk.Canvas(app,bg=bg,highlightthickness=0,yscrollincrement=20)
         scroll=ttk.Scrollbar(app,orient='vertical',command=canvas.yview,style='SL.Vertical.TScrollbar')
         canvas.configure(yscrollcommand=scroll.set);scroll.pack(side='right',fill='y');canvas.pack(side='left',fill='both',expand=True)
@@ -270,7 +270,7 @@ def run_gui(host, test_driver=None):
         if job.get('error'):
             message=job['error'];message=message if language=='zh' else message.split(' / ')[-1]
         widgets['detail'].config(text=message[:450],fg='#ffb4a8' if stage=='error' else muted)
-        title='SureLive · '+tr(stage if occupied else 'standby')
+        title='SureLive Local Assistant - '+COPY[stage if occupied else 'standby'][1]
         if tray and title!=previous_tray:tray.title=title;tray.update_menu();previous_tray=title
 
     def tick():
@@ -289,7 +289,7 @@ def run_gui(host, test_driver=None):
         update();app.after(500,tick)
     render()
     try:
-        tray=pystray.Icon('SureLiveASRPreview',icon_image,'SureLive',menu=pystray.Menu(
+        tray=pystray.Icon('SureLiveASRPreview',icon_image,'SureLive Local Assistant',menu=pystray.Menu(
             pystray.MenuItem(lambda item:tr('open'),lambda:events.put('show'),default=True),
             pystray.MenuItem(lambda item:tr('settings'),lambda:events.put('settings')),
             pystray.Menu.SEPARATOR,pystray.MenuItem(lambda item:tr('exit'),lambda:events.put('quit'))))
